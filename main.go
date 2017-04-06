@@ -25,384 +25,385 @@ type Instance struct {
 	val *C.PDF
 }
 
+// Instance represents a PDFlib instance.
 func New() *Instance {
 	return &Instance{val: C.PDF_new()}
 }
 
-// AddNamedDest
+// AddNamedDest ...
 func (i *Instance) AddNamedDest(name, options string) {}
 
-// AddPathPoint
+// AddPathPoint ...
 func (i *Instance) AddPathPoint(path int, x, y float64, kind, options string) {}
 
-// AddTableCell
+// AddTableCell ...
 func (i *Instance) AddTableCell(table, col, row int, text, options string) {}
 
-// AddTextflow
+// AddTextflow ...
 func (i *Instance) AddTextflow(textflow int, text, options string) {}
 
-// AddThumbnail
+// AddThumbnail ...
 func (i *Instance) AddThumbnail(image int) {}
 
-// Align
+// Align ...
 func (i *Instance) Align(x, y float64) {}
 
-// Arc
+// Arc ...
 func (i *Instance) Arc(x, y, r, alpha, beta float64) {}
 
-// Arcn
+// Arcn ...
 func (i *Instance) Arcn(x, y, r, alpha, beta float64) {}
 
-// BeginDocument
+// BeginDocument ...
 func (i *Instance) BeginDocument(filename, options string) {}
 
-// BeginDocumentCallback
+// BeginDocumentCallback ...
 func (i *Instance) BeginDocumentCallback() {} // FIXME
 
-// BeginFont
+// BeginFont ...
 func (i *Instance) BeginFont(fontname string, a, b, c, d, e, f float64, options string) {}
 
-// BeginGlyph
+// BeginGlyph ...
 func (i *Instance) BeginGlyph(glyphname string, wx, llx, lly, urx, ury float64) {}
 
-// BeginPageExt adds a new page to the document, and specify various options.
+// BeginPageExt adds a new page to the document, and specify various options. ...
 func (i *Instance) BeginPageExt(w, h float64, options string) {}
 
-// BeginTemplate
+// BeginTemplate ...
 func (i *Instance) BeginTemplate(w, h float64) {}
 
-// Circle
+// Circle ...
 func (i *Instance) Circle(x, y, r float64) {}
 
-// CircularArc
+// CircularArc ...
 func (i *Instance) CircularArc(x1, y1, x2, y2 float64) {}
 
-// Clip
+// Clip ...
 func (i *Instance) Clip() {}
 
-// CloseFont closes an open font handle which has not yet been used in the document.
+// CloseFont closes an open font handle which has not yet been used in the document. ...
 func (i *Instance) CloseFont(font int) {}
 
-// CloseImage closes an image
+// CloseImage closes an image ...
 func (i *Instance) CloseImage(image int) {}
 
-// ClosePdiDocument
+// ClosePdiDocument ...
 func (i *Instance) ClosePdiDocument(doc int) {}
 
-// ClosePdiPage
+// ClosePdiPage ...
 func (i *Instance) ClosePdiPage(page int) {}
 
-// ClosePath
+// ClosePath ...
 func (i *Instance) ClosePath() {}
 
-// ClosePathFillStroke
+// ClosePathFillStroke ...
 func (i *Instance) ClosePathFillStroke() {}
 
-// Concat
+// Concat ...
 func (i *Instance) Concat(a, b, c, d, e, f float64) {}
 
-// ContinueText
+// ContinueText ...
 func (i *Instance) ContinueText(text string) {}
 
-// Create3dView
+// Create3dView ...
 func (i *Instance) Create3dView(username, options string) {}
 
-// CreateAction
+// CreateAction ...
 func (i *Instance) CreateAction(kind, options string) {}
 
-// CreateAnnotation
+// CreateAnnotation ...
 func (i *Instance) CreateAnnotation(llx, llr, urx, ury float64, kind, options string) {}
 
-// CreateBookmark
+// CreateBookmark ...
 func (i *Instance) CreateBookmark(text, options string) {}
 
-// CreateField
+// CreateField ...
 func (i *Instance) CreateField(llx, lly, urx, ury float64, name, kind, options string) {}
 
-// CreateFieldgroup
+// CreateFieldgroup ...
 func (i *Instance) CreateFieldgroup(name, options string) {}
 
-// CreateGstate
+// CreateGstate ...
 func (i *Instance) CreateGstate(options string) {}
 
-// CreatePvf
+// CreatePvf ...
 func (i *Instance) CreatePvf(filename string, data []byte, options string) {}
 
-// CreateTextflow
+// CreateTextflow ...
 func (i *Instance) CreateTextflow(text, options string) {}
 
-// CurveTo
+// CurveTo ...
 func (i *Instance) CurveTo(x1, y1, x2, y2, x3, y3 float64) {}
 
-// DefineLayer
+// DefineLayer ...
 func (i *Instance) DefineLayer(name, options string) {}
 
-// Delete
+// Delete ...
 func (i *Instance) Delete() {}
 
-// DeletePath
+// DeletePath ...
 func (i *Instance) DeletePath(path int) {}
 
-// DeletePvf
+// DeletePvf ...
 func (i *Instance) DeletePvf(filename string) {}
 
-// DeleteTable
+// DeleteTable ...
 func (i *Instance) DeleteTable(table int, options string) {}
 
-// DeleteTextflow
+// DeleteTextflow ...
 func (i *Instance) DeleteTextflow(textflow int) {}
 
-// DrawPath
+// DrawPath ...
 func (i *Instance) DrawPath(path int, x, y float64, options string) {}
 
-// Ellipse
+// Ellipse ...
 func (i *Instance) Ellipse(x, y, rx, ry float64) {}
 
-// EndDocument
+// EndDocument ...
 func (i *Instance) EndDocument(options string) {}
 
-// EndFont
+// EndFont ...
 func (i *Instance) EndFont() {}
 
-// EndGlyph
+// EndGlyph ...
 func (i *Instance) EndGlyph() {}
 
-// EndItem
+// EndItem ...
 func (i *Instance) EndItem(id int) {}
 
-// EndLayer
+// EndLayer ...
 func (i *Instance) EndLayer() {}
 
-// EndMc
+// EndMc ...
 func (i *Instance) EndMc() {}
 
-// EndPageExt
+// EndPageExt ...
 func (i *Instance) EndPageExt() {}
 
-// EndPattern
+// EndPattern ...
 func (i *Instance) EndPattern() {}
 
-// EndTemplateExt
+// EndTemplateExt ...
 func (i *Instance) EndTemplateExt(w, h float64) {}
 
-// EndPath
+// EndPath ...
 func (i *Instance) EndPath() {}
 
-// Fill
+// Fill ...
 func (i *Instance) Fill() {}
 
-// FillImageblock
+// FillImageblock ...
 func (i *Instance) FillImageblock(page int, blockname string, image int, options string) {}
 
-// FillPdfblock
+// FillPdfblock ...
 func (i *Instance) FillPdfblock(page int, blockname string, document int, options string) {}
 
-// FillTextblock
+// FillTextblock ...
 func (i *Instance) FillTextblock(page int, blockname, text, options string) {}
 
-// FitImage
+// FitImage ...
 func (i *Instance) FitImage(image int, x, y float64, options string) {}
 
-// FitPdiPage
+// FitPdiPage ...
 func (i *Instance) FitPdiPage(page int, x, y float64, options string) {}
 
-// FitTable
+// FitTable ...
 func (i *Instance) FitTable(table int, llx, lly, urx, ury float64, options string) {}
 
-// FitTextflow
+// FitTextflow ...
 func (i *Instance) FitTextflow(textflow int, llx, lly, urx, ury, options string) {}
 
-// FitTextline
+// FitTextline ...
 func (i *Instance) FitTextline(text string, x, y, float64, options string) {}
 
-// GetBuffer
+// GetBuffer ...
 func (i *Instance) GetBuffer() {}
 
-// GetParameter
+// GetParameter ...
 func (i *Instance) GetParameter(key string, modifier float64) {}
 
-// GetValue
+// GetValue ...
 func (i *Instance) GetValue(key string, modifier float64) {}
 
-// InfoFont
+// InfoFont ...
 func (i *Instance) InfoFont(font int, keyword, options string) {}
 
-// InfoImage
+// InfoImage ...
 func (i *Instance) InfoImage(image int, keyword, options string) {}
 
-// InfoMatchbox
+// InfoMatchbox ...
 func (i *Instance) InfoMatchbox(boxname string, num int, keyword string) {}
 
-// InfoPath
+// InfoPath ...
 func (i *Instance) InfoPath(path int, keyword, options string) {}
 
-// InfoPdiPage
+// InfoPdiPage ...
 func (i *Instance) InfoPdiPage(page int, keyword, options string) {}
 
-// InfoTable
+// InfoTable ...
 func (i *Instance) InfoTable(table int, keyword string) {}
 
-// InfoTextflow
+// InfoTextflow ...
 func (i *Instance) InfoTextflow(textflow int, keyword string) {}
 
-// InfoTextline
+// InfoTextline ...
 func (i *Instance) InfoTextline(text, keyword, options string) {}
 
-// InitGraphics
+// InitGraphics ...
 func (i *Instance) InitGraphics() {}
 
-// LineTo
+// LineTo ...
 func (i *Instance) LineTo(x, y float64) {}
 
-// Load3dData
+// Load3dData ...
 func (i *Instance) Load3dData(filename, options string) {}
 
-// LoadFont
+// LoadFont ...
 func (i *Instance) LoadFont(fontname, encoding, options string) {}
 
-// LoadIccProfile
+// LoadIccProfile ...
 func (i *Instance) LoadIccProfile(profilename, options string) {}
 
-// LoadImage
+// LoadImage ...
 func (i *Instance) LoadImage(imagetype, filename, options string) {}
 
-// MakeSpotColor
+// MakeSpotColor ...
 func (i *Instance) MakeSpotColor(spotname string) {}
 
-// McPoint
+// McPoint ...
 func (i *Instance) McPoint(tag, options string) {}
 
-// MoveTo
+// MoveTo ...
 func (i *Instance) MoveTo(x, y float64) {}
 
-// OpenPdiDocument
+// OpenPdiDocument ...
 func (i *Instance) OpenPdiDocument(filename, options string) {}
 
-// OpenPdiCallback
+// OpenPdiCallback ...
 func (i *Instance) OpenPdiCallback() {} // FIXME
 
-// OpenPdiPage
+// OpenPdiPage ...
 func (i *Instance) OpenPdiPage(doc, page int, options string) {}
 
-// PcosGetNumber
+// PcosGetNumber ...
 func (i *Instance) PcosGetNumber(doc int, path string) {}
 
-// PcosGetString
+// PcosGetString ...
 func (i *Instance) PcosGetString(doc int, path string) {}
 
-// PcosGetStream
+// PcosGetStream ...
 func (i *Instance) PcosGetStream(doc int, options, path string) {}
 
-// ProcessPdi
+// ProcessPdi ...
 func (i *Instance) ProcessPdi(doc, page int, options string) {}
 
-// RCurveTo
+// RCurveTo ...
 func (i *Instance) RCurveTo(x1, y1, x2, y2, x3, y3 float64) {}
 
-// Rect
+// Rect ...
 func (i *Instance) Rect(x, y, w, h float64) {}
 
-// Restore
+// Restore ...
 func (i *Instance) Restore() {}
 
-// ResumePage
+// ResumePage ...
 func (i *Instance) ResumePage(options string) {}
 
-// Rotate
+// Rotate ...
 func (i *Instance) Rotate(phi float64) {}
 
-// Save
+// Save ...
 func (i *Instance) Save() {}
 
-// Scale
+// Scale ...
 func (i *Instance) Scale(sx, sy float64) {}
 
-// SetGstate
+// SetGstate ...
 func (i *Instance) SetGstate(gstate int) {}
 
-// SetInfo
+// SetInfo ...
 func (i *Instance) SetInfo(key, value string) {}
 
-// SetLayerDependency
+// SetLayerDependency ...
 func (i *Instance) SetLayerDependency(kind, options string) {}
 
-// SetOption
+// SetOption ...
 func (i *Instance) SetOption(options string) {}
 
-// SetParameter
+// SetParameter ...
 func (i *Instance) SetParameter(key, value string) {}
 
-// SetTextPos
+// SetTextPos ...
 func (i *Instance) SetTextPos(x, y float64) {}
 
-// SetValue
+// SetValue ...
 func (i *Instance) SetValue(x, y float64) {}
 
-// SetColor
+// SetColor ...
 func (i *Instance) SetColor(fstype, colorspace string, c1, c2, c3, c4 float64) {}
 
-// SetDash
+// SetDash ...
 func (i *Instance) SetDash(b, w float64) {}
 
-// SetDashPattern
+// SetDashPattern ...
 func (i *Instance) SetDashPattern(options string) {}
 
-// SetFlat
+// SetFlat ...
 func (i *Instance) SetFlat(flatness float64) {}
 
-// SetFont
+// SetFont ...
 func (i *Instance) SetFont(font int, fontsize float64) {}
 
-// SetGray
+// SetGray ...
 func (i *Instance) SetGray(gray float64) {}
 
-// SetGrayFill
+// SetGrayFill ...
 func (i *Instance) SetGrayFill(gray float64) {}
 
-// SetGrayStroke
+// SetGrayStroke ...
 func (i *Instance) SetGrayStroke(gray float64) {}
 
-// SetLinecap
+// SetLinecap ...
 func (i *Instance) SetLinecap(linecap int) {}
 
-// SetLinejoin
+// SetLinejoin ...
 func (i *Instance) SetLinejoin(linejoin int) {}
 
-// SetLinewidth
+// SetLinewidth ...
 func (i *Instance) SetLinewidth(width float64) {}
 
-// SetMatrix
+// SetMatrix ...
 func (i *Instance) SetMatrix(a, b, c, d, e, f float64) {}
 
-// SetMatrix
+// SetMatrix ...
 func (i *Instance) SetMiterLimit(miter float64) {}
 
-// Shading
+// Shading ...
 func (i *Instance) Shading(shtype string, x0, y0, x1, y1, c1, c2, c3, c4 float64, options string) {}
 
-// ShadingPattern
+// ShadingPattern ...
 func (i *Instance) ShadingPattern(shading int, options string) {}
 
-// Shfill
+// Shfill ...
 func (i *Instance) Shfill(shading int) {}
 
-// Show
+// Show ...
 func (i *Instance) Show(text string) {}
 
-// ShowXY
+// ShowXY ...
 func (i *Instance) ShowXY(text string, x, y float64) {}
 
-// Skew
+// Skew ...
 func (i *Instance) Skew(alpha, beta float64) {}
 
-// StringWidth
+// StringWidth ...
 func (i *Instance) StringWidth(text string, font int, fontsize float64) {}
 
-// Stroke
+// Stroke ...
 func (i *Instance) Stroke() {}
 
-// SuspendPage
+// SuspendPage ...
 func (i *Instance) SuspendPage(options string) {}
 
-// Translate
+// Translate ...
 func (i *Instance) Translate(tx, ty float64) {}
