@@ -26,7 +26,7 @@ go install -tags 'pdflib-9'
 
 #### Requirements
 
-- Golang >= 1.2
+- Golang >= 1.5
 
 #### Copyright
 
