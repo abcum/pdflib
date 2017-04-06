@@ -21,11 +21,12 @@ package pdflib
 // #include "pdflib.h"
 import "C"
 
+// Instance represents a PDFlib instance.
 type Instance struct {
 	val *C.PDF
 }
 
-// Instance represents a PDFlib instance.
+// New creates a new PDFlb instance.
 func New() *Instance {
 	return &Instance{val: C.PDF_new()}
 }
@@ -375,7 +376,7 @@ func (i *Instance) SetLinewidth(width float64) {}
 // SetMatrix ...
 func (i *Instance) SetMatrix(a, b, c, d, e, f float64) {}
 
-// SetMatrix ...
+// SetMiterLimit ...
 func (i *Instance) SetMiterLimit(miter float64) {}
 
 // Shading ...
