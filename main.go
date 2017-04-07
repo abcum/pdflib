@@ -18,393 +18,783 @@ package pdflib
 
 // #include <stdio.h>
 // #include <stdlib.h>
+// #include "golang.h"
 // #include "pdflib.h"
 import "C"
+import "errors"
+import "unsafe"
 
-// Instance represents a PDFlib instance.
-type Instance struct {
+// PDFlib represents a PDFlib instance.
+type PDFlib struct {
 	val *C.PDF
 }
 
 // New creates a new PDFlb instance.
-func New() *Instance {
-	return &Instance{val: C.PDF_new()}
+func New() *PDFlib {
+	pdflib := &PDFlib{val: C.PDF_new()}
+	pdflib.SetParameter("errorpolicy", "exception")
+	return pdflib
+}
+
+func (p *PDFlib) catch() error {
+	if num := C._PDF_get_errnum(p.val); num > 0 {
+		return errors.New(C.GoString(C._PDF_get_errmsg(p.val)))
+	}
+	return nil
 }
 
 // AddNamedDest ...
-func (i *Instance) AddNamedDest(name, options string) {}
+func (p *PDFlib) AddNamedDest(name, options string) error {
+	C._PDF_add_nameddest(p.val, C.CString(name), 0, C.CString(options))
+	return p.catch()
+}
 
 // AddPathPoint ...
-func (i *Instance) AddPathPoint(path int, x, y float64, kind, options string) {}
+func (p *PDFlib) AddPathPoint(path int, x, y float64, kind, options string) (int, error) {
+	ret := int(C._PDF_add_path_point(p.val, C.int(path), C.double(x), C.double(y), C.CString(kind), C.CString(options)))
+	return ret, p.catch()
+}
 
 // AddTableCell ...
-func (i *Instance) AddTableCell(table, col, row int, text, options string) {}
+func (p *PDFlib) AddTableCell(table, col, row int, text, options string) (int, error) {
+	ret := int(C._PDF_add_table_cell(p.val, C.int(table), C.int(col), C.int(row), C.CString(text), 0, C.CString(options)))
+	return ret, p.catch()
+}
 
 // AddTextflow ...
-func (i *Instance) AddTextflow(textflow int, text, options string) {}
+func (p *PDFlib) AddTextflow(textflow int, text, options string) (int, error) {
+	ret := int(C._PDF_add_textflow(p.val, C.int(textflow), C.CString(text), 0, C.CString(options)))
+	return ret, p.catch()
+}
 
 // AddThumbnail ...
-func (i *Instance) AddThumbnail(image int) {}
+func (p *PDFlib) AddThumbnail(image int) error {
+	C._PDF_add_thumbnail(p.val, C.int(image))
+	return p.catch()
+}
 
 // Align ...
-func (i *Instance) Align(x, y float64) {}
+func (p *PDFlib) Align(x, y float64) error {
+	C._PDF_align(p.val, C.double(x), C.double(y))
+	return p.catch()
+}
 
 // Arc ...
-func (i *Instance) Arc(x, y, r, alpha, beta float64) {}
+func (p *PDFlib) Arc(x, y, r, alpha, beta float64) error {
+	C._PDF_arc(p.val, C.double(x), C.double(y), C.double(r), C.double(alpha), C.double(beta))
+	return p.catch()
+}
 
 // Arcn ...
-func (i *Instance) Arcn(x, y, r, alpha, beta float64) {}
+func (p *PDFlib) Arcn(x, y, r, alpha, beta float64) error {
+	C._PDF_arcn(p.val, C.double(x), C.double(y), C.double(r), C.double(alpha), C.double(beta))
+	return p.catch()
+}
 
 // BeginDocument ...
-func (i *Instance) BeginDocument(filename, options string) {}
-
-// BeginDocumentCallback ...
-func (i *Instance) BeginDocumentCallback() {} // FIXME
+func (p *PDFlib) BeginDocument(filename, options string) (int, error) {
+	ret := int(C._PDF_begin_document(p.val, C.CString(filename), 0, C.CString(options)))
+	return ret, p.catch()
+}
 
 // BeginFont ...
-func (i *Instance) BeginFont(fontname string, a, b, c, d, e, f float64, options string) {}
+func (p *PDFlib) BeginFont(fontname string, a, b, c, d, e, f float64, options string) error {
+	C._PDF_begin_font(p.val, C.CString(fontname), 0, C.double(a), C.double(b), C.double(c), C.double(d), C.double(e), C.double(f), C.CString(options))
+	return p.catch()
+}
 
 // BeginGlyph ...
-func (i *Instance) BeginGlyph(glyphname string, wx, llx, lly, urx, ury float64) {}
+func (p *PDFlib) BeginGlyph(glyphname string, wx, llx, lly, urx, ury float64) error {
+	C._PDF_begin_glyph(p.val, C.CString(glyphname), C.double(wx), C.double(llx), C.double(lly), C.double(urx), C.double(ury))
+	return p.catch()
+}
 
-// BeginPageExt adds a new page to the document, and specify various options. ...
-func (i *Instance) BeginPageExt(w, h float64, options string) {}
+// BeginItem ..
+func (p *PDFlib) BeginItem(tag, options string) (int, error) {
+	ret := int(C._PDF_begin_item(p.val, C.CString(tag), C.CString(options)))
+	return ret, p.catch()
+}
+
+// BeginLayer ..
+func (p *PDFlib) BeginLayer(layer int) error {
+	C._PDF_begin_layer(p.val, C.int(layer))
+	return p.catch()
+}
+
+// BeginPageExt adds a new page to the document, and specify various options.
+func (p *PDFlib) BeginPageExt(w, h float64, options string) error {
+	C._PDF_begin_page_ext(p.val, C.double(w), C.double(h), C.CString(options))
+	return p.catch()
+}
+
+// BeginPatten ..
+func (p *PDFlib) BeginPattern(w, h, xstep, ystep float64, painttype int) (int, error) {
+	ret := int(C._PDF_begin_pattern(p.val, C.double(w), C.double(h), C.double(xstep), C.double(ystep), C.int(painttype)))
+	return ret, p.catch()
+}
 
 // BeginTemplate ...
-func (i *Instance) BeginTemplate(w, h float64) {}
+func (p *PDFlib) BeginTemplate(w, h float64, options string) (int, error) {
+	ret := int(C._PDF_begin_template_ext(p.val, C.double(w), C.double(h), C.CString(options)))
+	return ret, p.catch()
+}
 
 // Circle ...
-func (i *Instance) Circle(x, y, r float64) {}
+func (p *PDFlib) Circle(x, y, r float64) error {
+	C._PDF_circle(p.val, C.double(x), C.double(y), C.double(r))
+	return p.catch()
+}
 
 // CircularArc ...
-func (i *Instance) CircularArc(x1, y1, x2, y2 float64) {}
+func (p *PDFlib) CircularArc(x1, y1, x2, y2 float64) error {
+	C._PDF_circular_arc(p.val, C.double(x1), C.double(y1), C.double(x2), C.double(y2))
+	return p.catch()
+}
 
 // Clip ...
-func (i *Instance) Clip() {}
+func (p *PDFlib) Clip() error {
+	C._PDF_clip(p.val)
+	return p.catch()
+}
 
-// CloseFont closes an open font handle which has not yet been used in the document. ...
-func (i *Instance) CloseFont(font int) {}
+// CloseFont closes an open font handle which has not yet been used in the document.
+func (p *PDFlib) CloseFont(font int) error {
+	C._PDF_close_font(p.val, C.int(font))
+	return p.catch()
+}
 
 // CloseImage closes an image ...
-func (i *Instance) CloseImage(image int) {}
+func (p *PDFlib) CloseImage(image int) error {
+	C._PDF_close_image(p.val, C.int(image))
+	return p.catch()
+}
 
 // ClosePdiDocument ...
-func (i *Instance) ClosePdiDocument(doc int) {}
+func (p *PDFlib) ClosePdiDocument(doc int) error {
+	C._PDF_close_pdi_document(p.val, C.int(doc))
+	return p.catch()
+}
 
 // ClosePdiPage ...
-func (i *Instance) ClosePdiPage(page int) {}
+func (p *PDFlib) ClosePdiPage(page int) error {
+	C._PDF_close_pdi_page(p.val, C.int(page))
+	return p.catch()
+}
 
 // ClosePath ...
-func (i *Instance) ClosePath() {}
+func (p *PDFlib) ClosePath() error {
+	C._PDF_closepath(p.val)
+	return p.catch()
+}
 
 // ClosePathFillStroke ...
-func (i *Instance) ClosePathFillStroke() {}
+func (p *PDFlib) ClosePathFillStroke() error {
+	C._PDF_closepath_fill_stroke(p.val)
+	return p.catch()
+}
+
+// ClosePathStroke ...
+func (p *PDFlib) ClosePathStroke() error {
+	C._PDF_closepath_stroke(p.val)
+	return p.catch()
+}
 
 // Concat ...
-func (i *Instance) Concat(a, b, c, d, e, f float64) {}
+func (p *PDFlib) Concat(a, b, c, d, e, f float64) error {
+	C._PDF_concat(p.val, C.double(a), C.double(b), C.double(c), C.double(d), C.double(e), C.double(f))
+	return p.catch()
+}
 
 // ContinueText ...
-func (i *Instance) ContinueText(text string) {}
+func (p *PDFlib) ContinueText(text string) error {
+	C._PDF_continue_text(p.val, C.CString(text))
+	return p.catch()
+}
 
 // Create3dView ...
-func (i *Instance) Create3dView(username, options string) {}
+func (p *PDFlib) Create3dView(username, options string) error {
+	C._PDF_create_3dview(p.val, C.CString(username), 0, C.CString(options))
+	return p.catch()
+}
 
 // CreateAction ...
-func (i *Instance) CreateAction(kind, options string) {}
+func (p *PDFlib) CreateAction(kind, options string) (int, error) {
+	ret := int(C._PDF_create_action(p.val, C.CString(kind), C.CString(options)))
+	return ret, p.catch()
+}
 
 // CreateAnnotation ...
-func (i *Instance) CreateAnnotation(llx, llr, urx, ury float64, kind, options string) {}
+func (p *PDFlib) CreateAnnotation(llx, llr, urx, ury float64, kind, options string) error {
+	C._PDF_create_annotation(p.val, C.double(llx), C.double(llr), C.double(urx), C.double(ury), C.CString(kind), C.CString(options))
+	return p.catch()
+}
 
 // CreateBookmark ...
-func (i *Instance) CreateBookmark(text, options string) {}
+func (p *PDFlib) CreateBookmark(text, options string) (int, error) {
+	ret := int(C._PDF_create_bookmark(p.val, C.CString(text), 0, C.CString(options)))
+	return ret, p.catch()
+}
 
 // CreateField ...
-func (i *Instance) CreateField(llx, lly, urx, ury float64, name, kind, options string) {}
+func (p *PDFlib) CreateField(llx, lly, urx, ury float64, name, kind, options string) error {
+	C._PDF_create_field(p.val, C.double(llx), C.double(lly), C.double(urx), C.double(ury), C.CString(name), 0, C.CString(kind), C.CString(options))
+	return p.catch()
+}
 
 // CreateFieldgroup ...
-func (i *Instance) CreateFieldgroup(name, options string) {}
+func (p *PDFlib) CreateFieldgroup(name, options string) error {
+	C._PDF_create_fieldgroup(p.val, C.CString(name), 0, C.CString(options))
+	return p.catch()
+}
 
 // CreateGstate ...
-func (i *Instance) CreateGstate(options string) {}
+func (p *PDFlib) CreateGstate(options string) (int, error) {
+	ret := int(C._PDF_create_gstate(p.val, C.CString(options)))
+	return ret, p.catch()
+}
 
 // CreatePvf ...
-func (i *Instance) CreatePvf(filename string, data []byte, options string) {}
+func (p *PDFlib) CreatePvf(filename string, data []byte, options string) error {
+	C._PDF_create_pvf(p.val, C.CString(filename), 0, unsafe.Pointer(&data[0]), C.size_t(len(data)), C.CString(options))
+	return p.catch()
+}
 
 // CreateTextflow ...
-func (i *Instance) CreateTextflow(text, options string) {}
+func (p *PDFlib) CreateTextflow(text, options string) (int, error) {
+	ret := int(C._PDF_create_textflow(p.val, C.CString(text), 0, C.CString(options)))
+	return ret, p.catch()
+}
 
 // CurveTo ...
-func (i *Instance) CurveTo(x1, y1, x2, y2, x3, y3 float64) {}
+func (p *PDFlib) CurveTo(x1, y1, x2, y2, x3, y3 float64) error {
+	C._PDF_curveto(p.val, C.double(x1), C.double(y1), C.double(x2), C.double(y2), C.double(x3), C.double(y3))
+	return p.catch()
+}
 
 // DefineLayer ...
-func (i *Instance) DefineLayer(name, options string) {}
+func (p *PDFlib) DefineLayer(name, options string) (int, error) {
+	ret := int(C._PDF_define_layer(p.val, C.CString(name), 0, C.CString(options)))
+	return ret, p.catch()
+}
 
 // Delete ...
-func (i *Instance) Delete() {}
+func (p *PDFlib) Delete() {
+	C._PDF_delete(p.val)
+}
 
 // DeletePath ...
-func (i *Instance) DeletePath(path int) {}
+func (p *PDFlib) DeletePath(path int) error {
+	C._PDF_delete_path(p.val, C.int(path))
+	return p.catch()
+}
 
 // DeletePvf ...
-func (i *Instance) DeletePvf(filename string) {}
+func (p *PDFlib) DeletePvf(filename string) error {
+	C._PDF_delete_pvf(p.val, C.CString(filename), 0)
+	return p.catch()
+}
 
 // DeleteTable ...
-func (i *Instance) DeleteTable(table int, options string) {}
+func (p *PDFlib) DeleteTable(table int, options string) error {
+	C._PDF_delete_table(p.val, C.int(table), C.CString(options))
+	return p.catch()
+}
 
 // DeleteTextflow ...
-func (i *Instance) DeleteTextflow(textflow int) {}
+func (p *PDFlib) DeleteTextflow(textflow int) error {
+	C._PDF_delete_textflow(p.val, C.int(textflow))
+	return p.catch()
+}
 
 // DrawPath ...
-func (i *Instance) DrawPath(path int, x, y float64, options string) {}
+func (p *PDFlib) DrawPath(path int, x, y float64, options string) error {
+	C._PDF_draw_path(p.val, C.int(path), C.double(x), C.double(y), C.CString(options))
+	return p.catch()
+}
 
 // Ellipse ...
-func (i *Instance) Ellipse(x, y, rx, ry float64) {}
+func (p *PDFlib) Ellipse(x, y, rx, ry float64) error {
+	C._PDF_ellipse(p.val, C.double(x), C.double(y), C.double(rx), C.double(ry))
+	return p.catch()
+}
 
 // EndDocument ...
-func (i *Instance) EndDocument(options string) {}
+func (p *PDFlib) EndDocument(options string) error {
+	C._PDF_end_document(p.val, C.CString(options))
+	return p.catch()
+}
 
 // EndFont ...
-func (i *Instance) EndFont() {}
+func (p *PDFlib) EndFont() error {
+	C._PDF_end_font(p.val)
+	return p.catch()
+}
 
 // EndGlyph ...
-func (i *Instance) EndGlyph() {}
+func (p *PDFlib) EndGlyph() error {
+	C._PDF_end_glyph(p.val)
+	return p.catch()
+}
 
 // EndItem ...
-func (i *Instance) EndItem(id int) {}
+func (p *PDFlib) EndItem(id int) error {
+	C._PDF_end_item(p.val, C.int(id))
+	return p.catch()
+}
 
 // EndLayer ...
-func (i *Instance) EndLayer() {}
+func (p *PDFlib) EndLayer() error {
+	C._PDF_end_layer(p.val)
+	return p.catch()
+}
 
 // EndMc ...
-func (i *Instance) EndMc() {}
+func (p *PDFlib) EndMc() error {
+	C._PDF_end_mc(p.val)
+	return p.catch()
+}
 
 // EndPageExt ...
-func (i *Instance) EndPageExt() {}
+func (p *PDFlib) EndPageExt(options string) error {
+	C._PDF_end_page_ext(p.val, C.CString(options))
+	return p.catch()
+}
 
 // EndPattern ...
-func (i *Instance) EndPattern() {}
+func (p *PDFlib) EndPattern() error {
+	C._PDF_end_pattern(p.val)
+	return p.catch()
+}
 
 // EndTemplateExt ...
-func (i *Instance) EndTemplateExt(w, h float64) {}
+func (p *PDFlib) EndTemplateExt(w, h float64) error {
+	C._PDF_end_template_ext(p.val, C.double(w), C.double(h))
+	return p.catch()
+}
 
 // EndPath ...
-func (i *Instance) EndPath() {}
+func (p *PDFlib) EndPath() error {
+	C._PDF_endpath(p.val)
+	return p.catch()
+}
 
 // Fill ...
-func (i *Instance) Fill() {}
+func (p *PDFlib) Fill() error {
+	C._PDF_fill(p.val)
+	return p.catch()
+}
 
 // FillImageblock ...
-func (i *Instance) FillImageblock(page int, blockname string, image int, options string) {}
+func (p *PDFlib) FillImageblock(page int, blockname string, image int, options string) (int, error) {
+	ret := int(C._PDF_fill_imageblock(p.val, C.int(page), C.CString(blockname), C.int(image), C.CString(options)))
+	return ret, p.catch()
+}
 
 // FillPdfblock ...
-func (i *Instance) FillPdfblock(page int, blockname string, document int, options string) {}
+func (p *PDFlib) FillPdfblock(page int, blockname string, content int, options string) (int, error) {
+	ret := int(C._PDF_fill_pdfblock(p.val, C.int(page), C.CString(blockname), C.int(content), C.CString(options)))
+	return ret, p.catch()
+}
+
+// FillStroke ...
+func (p *PDFlib) FillStroke() error {
+	C._PDF_fill_stroke(p.val)
+	return p.catch()
+}
 
 // FillTextblock ...
-func (i *Instance) FillTextblock(page int, blockname, text, options string) {}
+func (p *PDFlib) FillTextblock(page int, blockname, text, options string) (int, error) {
+	ret := int(C._PDF_fill_textblock(p.val, C.int(page), C.CString(blockname), C.CString(text), 0, C.CString(options)))
+	return ret, p.catch()
+}
 
 // FitImage ...
-func (i *Instance) FitImage(image int, x, y float64, options string) {}
+func (p *PDFlib) FitImage(image int, x, y float64, options string) error {
+	C._PDF_fit_image(p.val, C.int(image), C.double(x), C.double(y), C.CString(options))
+	return p.catch()
+}
 
 // FitPdiPage ...
-func (i *Instance) FitPdiPage(page int, x, y float64, options string) {}
+func (p *PDFlib) FitPdiPage(page int, x, y float64, options string) error {
+	C._PDF_fit_pdi_page(p.val, C.int(page), C.double(x), C.double(y), C.CString(options))
+	return p.catch()
+}
 
 // FitTable ...
-func (i *Instance) FitTable(table int, llx, lly, urx, ury float64, options string) {}
+func (p *PDFlib) FitTable(table int, llx, lly, urx, ury float64, options string) (string, error) {
+	ret := C.GoString(C._PDF_fit_table(p.val, C.int(table), C.double(llx), C.double(lly), C.double(urx), C.double(ury), C.CString(options)))
+	return ret, p.catch()
+}
 
 // FitTextflow ...
-func (i *Instance) FitTextflow(textflow int, llx, lly, urx, ury, options string) {}
+func (p *PDFlib) FitTextflow(textflow int, llx, lly, urx, ury float64, options string) (string, error) {
+	ret := C.GoString(C._PDF_fit_textflow(p.val, C.int(textflow), C.double(llx), C.double(lly), C.double(urx), C.double(ury), C.CString(options)))
+	return ret, p.catch()
+}
 
 // FitTextline ...
-func (i *Instance) FitTextline(text string, x, y, float64, options string) {}
+func (p *PDFlib) FitTextline(text string, x, y float64, options string) error {
+	C._PDF_fit_textline(p.val, C.CString(text), 0, C.double(x), C.double(y), C.CString(options))
+	return p.catch()
+}
 
 // GetBuffer ...
-func (i *Instance) GetBuffer() {}
+func (p *PDFlib) GetBuffer() ([]byte, int, error) {
+	var size C.long
+	ret := []byte(C.GoStringN(C.PDF_get_buffer(p.val, &size), C.int(size)))
+	return ret, int(size), p.catch()
+}
 
 // GetParameter ...
-func (i *Instance) GetParameter(key string, modifier float64) {}
+func (p *PDFlib) GetParameter(key string, modifier float64) (string, error) {
+	ret := C.GoString(C._PDF_get_parameter(p.val, C.CString(key), C.double(modifier)))
+	return ret, p.catch()
+}
 
 // GetValue ...
-func (i *Instance) GetValue(key string, modifier float64) {}
+func (p *PDFlib) GetValue(key string, modifier float64) (float64, error) {
+	ret := float64(C._PDF_get_value(p.val, C.CString(key), C.double(modifier)))
+	return ret, p.catch()
+}
 
 // InfoFont ...
-func (i *Instance) InfoFont(font int, keyword, options string) {}
+func (p *PDFlib) InfoFont(font int, keyword, options string) (float64, error) {
+	ret := float64(C._PDF_info_font(p.val, C.int(font), C.CString(keyword), C.CString(options)))
+	return ret, p.catch()
+}
 
 // InfoImage ...
-func (i *Instance) InfoImage(image int, keyword, options string) {}
+func (p *PDFlib) InfoImage(image int, keyword, options string) (float64, error) {
+	ret := float64(C._PDF_info_image(p.val, C.int(image), C.CString(keyword), C.CString(options)))
+	return ret, p.catch()
+}
 
 // InfoMatchbox ...
-func (i *Instance) InfoMatchbox(boxname string, num int, keyword string) {}
+func (p *PDFlib) InfoMatchbox(boxname string, num int, keyword string) (float64, error) {
+	ret := float64(C._PDF_info_matchbox(p.val, C.CString(boxname), 0, C.int(num), C.CString(keyword)))
+	return ret, p.catch()
+}
 
 // InfoPath ...
-func (i *Instance) InfoPath(path int, keyword, options string) {}
+func (p *PDFlib) InfoPath(path int, keyword, options string) (float64, error) {
+	ret := float64(C._PDF_info_path(p.val, C.int(path), C.CString(keyword), C.CString(options)))
+	return ret, p.catch()
+}
 
 // InfoPdiPage ...
-func (i *Instance) InfoPdiPage(page int, keyword, options string) {}
+func (p *PDFlib) InfoPdiPage(page int, keyword, options string) (float64, error) {
+	ret := float64(C._PDF_info_pdi_page(p.val, C.int(page), C.CString(keyword), C.CString(options)))
+	return ret, p.catch()
+}
 
 // InfoTable ...
-func (i *Instance) InfoTable(table int, keyword string) {}
+func (p *PDFlib) InfoTable(table int, keyword string) (float64, error) {
+	ret := float64(C._PDF_info_table(p.val, C.int(table), C.CString(keyword)))
+	return ret, p.catch()
+}
 
 // InfoTextflow ...
-func (i *Instance) InfoTextflow(textflow int, keyword string) {}
+func (p *PDFlib) InfoTextflow(textflow int, keyword string) (float64, error) {
+	ret := float64(C._PDF_info_textflow(p.val, C.int(textflow), C.CString(keyword)))
+	return ret, p.catch()
+}
 
 // InfoTextline ...
-func (i *Instance) InfoTextline(text, keyword, options string) {}
+func (p *PDFlib) InfoTextline(text, keyword, options string) (float64, error) {
+	ret := float64(C._PDF_info_textline(p.val, C.CString(text), 0, C.CString(keyword), C.CString(options)))
+	return ret, p.catch()
+}
 
 // InitGraphics ...
-func (i *Instance) InitGraphics() {}
+func (p *PDFlib) InitGraphics() error {
+	C._PDF_initgraphics(p.val)
+	return p.catch()
+}
 
 // LineTo ...
-func (i *Instance) LineTo(x, y float64) {}
+func (p *PDFlib) LineTo(x, y float64) error {
+	C._PDF_lineto(p.val, C.double(x), C.double(y))
+	return p.catch()
+}
 
 // Load3dData ...
-func (i *Instance) Load3dData(filename, options string) {}
+func (p *PDFlib) Load3dData(filename, options string) (int, error) {
+	ret := int(C._PDF_load_3ddata(p.val, C.CString(filename), 0, C.CString(options)))
+	return ret, p.catch()
+}
 
 // LoadFont ...
-func (i *Instance) LoadFont(fontname, encoding, options string) {}
+func (p *PDFlib) LoadFont(fontname, encoding, options string) (int, error) {
+	ret := int(C._PDF_load_font(p.val, C.CString(fontname), 0, C.CString(encoding), C.CString(options)))
+	return ret, p.catch()
+}
 
 // LoadIccProfile ...
-func (i *Instance) LoadIccProfile(profilename, options string) {}
+func (p *PDFlib) LoadIccProfile(profilename, options string) (int, error) {
+	ret := int(C._PDF_load_iccprofile(p.val, C.CString(profilename), 0, C.CString(options)))
+	return ret, p.catch()
+}
 
 // LoadImage ...
-func (i *Instance) LoadImage(imagetype, filename, options string) {}
+func (p *PDFlib) LoadImage(imagetype, filename, options string) (int, error) {
+	ret := int(C._PDF_load_image(p.val, C.CString(imagetype), C.CString(filename), 0, C.CString(options)))
+	return ret, p.catch()
+}
 
 // MakeSpotColor ...
-func (i *Instance) MakeSpotColor(spotname string) {}
+func (p *PDFlib) MakeSpotColor(spotname string) (int, error) {
+	ret := int(C._PDF_makespotcolor(p.val, C.CString(spotname), 0))
+	return ret, p.catch()
+}
 
 // McPoint ...
-func (i *Instance) McPoint(tag, options string) {}
+func (p *PDFlib) McPoint(tag, options string) error {
+	C._PDF_mc_point(p.val, C.CString(tag), C.CString(options))
+	return p.catch()
+}
 
 // MoveTo ...
-func (i *Instance) MoveTo(x, y float64) {}
+func (p *PDFlib) MoveTo(x, y float64) error {
+	C._PDF_moveto(p.val, C.double(x), C.double(y))
+	return p.catch()
+}
 
 // OpenPdiDocument ...
-func (i *Instance) OpenPdiDocument(filename, options string) {}
-
-// OpenPdiCallback ...
-func (i *Instance) OpenPdiCallback() {} // FIXME
+func (p *PDFlib) OpenPdiDocument(filename, options string) (int, error) {
+	ret := int(C._PDF_open_pdi_document(p.val, C.CString(filename), 0, C.CString(options)))
+	return ret, p.catch()
+}
 
 // OpenPdiPage ...
-func (i *Instance) OpenPdiPage(doc, page int, options string) {}
+func (p *PDFlib) OpenPdiPage(doc, page int, options string) (int, error) {
+	ret := int(C._PDF_open_pdi_page(p.val, C.int(doc), C.int(page), C.CString(options)))
+	return ret, p.catch()
+}
 
 // PcosGetNumber ...
-func (i *Instance) PcosGetNumber(doc int, path string) {}
+func (p *PDFlib) PcosGetNumber(doc int, path string) (float64, error) {
+	ret := float64(C._PDF_pcos_get_number(p.val, C.int(doc), C.CString(path)))
+	return ret, p.catch()
+}
 
 // PcosGetString ...
-func (i *Instance) PcosGetString(doc int, path string) {}
+func (p *PDFlib) PcosGetString(doc int, path string) (string, error) {
+	ret := string(C.GoString(C._PDF_pcos_get_string(p.val, C.int(doc), C.CString(path))))
+	return ret, p.catch()
+}
 
 // PcosGetStream ...
-func (i *Instance) PcosGetStream(doc int, options, path string) {}
+func (p *PDFlib) PcosGetStream(doc int, options, path string) (string, error) {
+	ret := "" // string(C.GoString(C._PDF_pcos_get_stream(p.val, C.int(doc), 0, C.CString(options), C.CString(path))))
+	return ret, p.catch()
+}
 
 // ProcessPdi ...
-func (i *Instance) ProcessPdi(doc, page int, options string) {}
+func (p *PDFlib) ProcessPdi(doc, page int, options string) (int, error) {
+	ret := int(C._PDF_process_pdi(p.val, C.int(doc), C.int(page), C.CString(options)))
+	return ret, p.catch()
+}
 
 // RCurveTo ...
-func (i *Instance) RCurveTo(x1, y1, x2, y2, x3, y3 float64) {}
+func (p *PDFlib) RCurveTo(x1, y1, x2, y2, x3, y3 float64) error {
+	C._PDF_rcurveto(p.val, C.double(x1), C.double(x1), C.double(y1), C.double(x2), C.double(y2), C.double(y3))
+	return p.catch()
+}
 
 // Rect ...
-func (i *Instance) Rect(x, y, w, h float64) {}
+func (p *PDFlib) Rect(x, y, w, h float64) error {
+	C._PDF_rect(p.val, C.double(x), C.double(y), C.double(w), C.double(h))
+	return p.catch()
+}
 
 // Restore ...
-func (i *Instance) Restore() {}
+func (p *PDFlib) Restore() error {
+	C._PDF_restore(p.val)
+	return p.catch()
+}
 
 // ResumePage ...
-func (i *Instance) ResumePage(options string) {}
+func (p *PDFlib) ResumePage(options string) error {
+	C._PDF_resume_page(p.val, C.CString(options))
+	return p.catch()
+}
 
 // Rotate ...
-func (i *Instance) Rotate(phi float64) {}
+func (p *PDFlib) Rotate(phi float64) error {
+	C._PDF_rotate(p.val, C.double(phi))
+	return p.catch()
+}
 
 // Save ...
-func (i *Instance) Save() {}
+func (p *PDFlib) Save() error {
+	C._PDF_save(p.val)
+	return p.catch()
+}
 
 // Scale ...
-func (i *Instance) Scale(sx, sy float64) {}
+func (p *PDFlib) Scale(sx, sy float64) error {
+	C._PDF_scale(p.val, C.double(sx), C.double(sy))
+	return p.catch()
+}
 
 // SetGstate ...
-func (i *Instance) SetGstate(gstate int) {}
+func (p *PDFlib) SetGstate(gstate int) error {
+	C._PDF_set_gstate(p.val, C.int(gstate))
+	return p.catch()
+}
 
 // SetInfo ...
-func (i *Instance) SetInfo(key, value string) {}
+func (p *PDFlib) SetInfo(key, value string) error {
+	C._PDF_set_info(p.val, C.CString(key), C.CString(value))
+	return p.catch()
+}
 
 // SetLayerDependency ...
-func (i *Instance) SetLayerDependency(kind, options string) {}
+func (p *PDFlib) SetLayerDependency(kind, options string) error {
+	C._PDF_set_layer_dependency(p.val, C.CString(kind), C.CString(options))
+	return p.catch()
+}
 
 // SetOption ...
-func (i *Instance) SetOption(options string) {}
+func (p *PDFlib) SetOption(options string) error {
+	C._PDF_set_option(p.val, C.CString(options))
+	return p.catch()
+}
 
 // SetParameter ...
-func (i *Instance) SetParameter(key, value string) {}
+func (p *PDFlib) SetParameter(key, value string) error {
+	C._PDF_set_parameter(p.val, C.CString(key), C.CString(value))
+	return p.catch()
+}
 
 // SetTextPos ...
-func (i *Instance) SetTextPos(x, y float64) {}
+func (p *PDFlib) SetTextPos(x, y float64) error {
+	C._PDF_set_text_pos(p.val, C.double(x), C.double(y))
+	return p.catch()
+}
 
 // SetValue ...
-func (i *Instance) SetValue(x, y float64) {}
+func (p *PDFlib) SetValue(key string, value float64) error {
+	C._PDF_set_value(p.val, C.CString(key), C.double(value))
+	return p.catch()
+}
 
 // SetColor ...
-func (i *Instance) SetColor(fstype, colorspace string, c1, c2, c3, c4 float64) {}
+func (p *PDFlib) SetColor(fstype, colorspace string, c1, c2, c3, c4 float64) error {
+	C._PDF_setcolor(p.val, C.CString(fstype), C.CString(colorspace), C.double(c1), C.double(c2), C.double(c3), C.double(c4))
+	return p.catch()
+}
 
 // SetDash ...
-func (i *Instance) SetDash(b, w float64) {}
+func (p *PDFlib) SetDash(b, w float64) error {
+	C._PDF_setdash(p.val, C.double(b), C.double(w))
+	return p.catch()
+}
 
 // SetDashPattern ...
-func (i *Instance) SetDashPattern(options string) {}
+func (p *PDFlib) SetDashPattern(options string) error {
+	C._PDF_setdashpattern(p.val, C.CString(options))
+	return p.catch()
+}
 
 // SetFlat ...
-func (i *Instance) SetFlat(flatness float64) {}
+func (p *PDFlib) SetFlat(flatness float64) error {
+	C._PDF_setflat(p.val, C.double(flatness))
+	return p.catch()
+}
 
 // SetFont ...
-func (i *Instance) SetFont(font int, fontsize float64) {}
-
-// SetGray ...
-func (i *Instance) SetGray(gray float64) {}
-
-// SetGrayFill ...
-func (i *Instance) SetGrayFill(gray float64) {}
-
-// SetGrayStroke ...
-func (i *Instance) SetGrayStroke(gray float64) {}
+func (p *PDFlib) SetFont(font int, fontsize float64) error {
+	C._PDF_setfont(p.val, C.int(font), C.double(fontsize))
+	return p.catch()
+}
 
 // SetLinecap ...
-func (i *Instance) SetLinecap(linecap int) {}
+func (p *PDFlib) SetLinecap(linecap int) error {
+	C._PDF_setlinecap(p.val, C.int(linecap))
+	return p.catch()
+}
 
 // SetLinejoin ...
-func (i *Instance) SetLinejoin(linejoin int) {}
+func (p *PDFlib) SetLinejoin(linejoin int) error {
+	C._PDF_setlinejoin(p.val, C.int(linejoin))
+	return p.catch()
+}
 
 // SetLinewidth ...
-func (i *Instance) SetLinewidth(width float64) {}
+func (p *PDFlib) SetLinewidth(width float64) error {
+	C._PDF_setlinewidth(p.val, C.double(width))
+	return p.catch()
+}
 
 // SetMatrix ...
-func (i *Instance) SetMatrix(a, b, c, d, e, f float64) {}
+func (p *PDFlib) SetMatrix(a, b, c, d, e, f float64) error {
+	C._PDF_setmatrix(p.val, C.double(a), C.double(b), C.double(c), C.double(d), C.double(e), C.double(f))
+	return p.catch()
+}
 
 // SetMiterLimit ...
-func (i *Instance) SetMiterLimit(miter float64) {}
+func (p *PDFlib) SetMiterLimit(miter float64) error {
+	C._PDF_setmiterlimit(p.val, C.double(miter))
+	return p.catch()
+}
 
 // Shading ...
-func (i *Instance) Shading(shtype string, x0, y0, x1, y1, c1, c2, c3, c4 float64, options string) {}
+func (p *PDFlib) Shading(shtype string, x0, y0, x1, y1, c1, c2, c3, c4 float64, options string) (int, error) {
+	ret := int(C._PDF_shading(p.val, C.CString(shtype), C.double(x0), C.double(y0), C.double(x1), C.double(y1), C.double(c1), C.double(c2), C.double(c3), C.double(c4), C.CString(options)))
+	return ret, p.catch()
+}
 
 // ShadingPattern ...
-func (i *Instance) ShadingPattern(shading int, options string) {}
+func (p *PDFlib) ShadingPattern(shading int, options string) (int, error) {
+	ret := int(C._PDF_shading_pattern(p.val, C.int(shading), C.CString(options)))
+	return ret, p.catch()
+}
 
 // Shfill ...
-func (i *Instance) Shfill(shading int) {}
+func (p *PDFlib) Shfill(shading int) error {
+	C._PDF_shfill(p.val, C.int(shading))
+	return p.catch()
+}
 
 // Show ...
-func (i *Instance) Show(text string) {}
+func (p *PDFlib) Show(text string) error {
+	C._PDF_show(p.val, C.CString(text))
+	return p.catch()
+}
 
 // ShowXY ...
-func (i *Instance) ShowXY(text string, x, y float64) {}
+func (p *PDFlib) ShowXY(text string, x, y float64) error {
+	C._PDF_show_xy(p.val, C.CString(text), C.double(x), C.double(y))
+	return p.catch()
+}
 
 // Skew ...
-func (i *Instance) Skew(alpha, beta float64) {}
+func (p *PDFlib) Skew(alpha, beta float64) error {
+	C._PDF_skew(p.val, C.double(alpha), C.double(beta))
+	return p.catch()
+}
 
 // StringWidth ...
-func (i *Instance) StringWidth(text string, font int, fontsize float64) {}
+func (p *PDFlib) StringWidth(text string, font int, fontsize float64) (float64, error) {
+	ret := float64(C._PDF_stringwidth(p.val, C.CString(text), C.int(font), C.double(fontsize)))
+	return ret, p.catch()
+}
 
 // Stroke ...
-func (i *Instance) Stroke() {}
+func (p *PDFlib) Stroke() error {
+	C._PDF_stroke(p.val)
+	return p.catch()
+}
 
 // SuspendPage ...
-func (i *Instance) SuspendPage(options string) {}
+func (p *PDFlib) SuspendPage(options string) error {
+	C._PDF_suspend_page(p.val, C.CString(options))
+	return p.catch()
+}
 
 // Translate ...
-func (i *Instance) Translate(tx, ty float64) {}
+func (p *PDFlib) Translate(tx, ty float64) error {
+	C._PDF_translate(p.val, C.double(tx), C.double(ty))
+	return p.catch()
+}
