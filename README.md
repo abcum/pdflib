@@ -15,13 +15,13 @@ go get github.com/abcum/pdflib
 [![](https://img.shields.io/badge/api-docs-ffbb00.svg?style=flat-square)](http://www.pdflib.com/fileadmin/pdflib/pdf/manuals/PDFlib-8.0.6-API-reference.pdf) [![](https://img.shields.io/badge/version-pdflib--8.0.6-0ffbbb.svg?style=flat-square)](http://www.pdflib.com/download/pdflib-family/pdflib-8/)
 
 ```bash
-go install -tags 'pdflib-8' 
+go install -tags 'pdflib8' 
 ```
 
 [![](https://img.shields.io/badge/api-docs-ffbb00.svg?style=flat-square)](http://www.pdflib.com/fileadmin/pdflib/pdf/manuals/PDFlib-9.1.0-API-reference.pdf) [![](https://img.shields.io/badge/version-pdflib--9.1.0-0ffbbb.svg?style=flat-square)](http://www.pdflib.com/download/pdflib-family/pdflib-9/)
 
 ```bash
-go install -tags 'pdflib-9' 
+go install -tags 'pdflib9' 
 ```
 
 #### Requirements
