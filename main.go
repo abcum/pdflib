@@ -127,7 +127,7 @@ func (p *PDFlib) BeginPageExt(w, h float64, options string) error {
 	return p.catch()
 }
 
-// BeginPatten ..
+// BeginPattern ..
 func (p *PDFlib) BeginPattern(w, h, xstep, ystep float64, painttype int) (int, error) {
 	ret := int(C._PDF_begin_pattern(p.val, C.double(w), C.double(h), C.double(xstep), C.double(ystep), C.int(painttype)))
 	return ret, p.catch()
