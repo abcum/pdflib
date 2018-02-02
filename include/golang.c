@@ -10,23 +10,23 @@ void _PDF_add_nameddest(PDF *p, const char *name, int len, const char *optlist) 
 }
 
 int _PDF_add_path_point(PDF *p, int path, double x, double y, const char *type, const char *optlist) {
-	PDF_TRY(p) { return PDF_add_path_point(p, path, x, y, type, optlist); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_add_path_point(p, path, x, y, type, optlist); } PDF_CATCH(p) { } return -1;
 }
 
 int _PDF_add_portfolio_file(PDF *p, int folder, const char *filename, int len, const char *optlist) {
-	PDF_TRY(p) { return PDF_add_portfolio_file(p, folder, filename, len, optlist); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_add_portfolio_file(p, folder, filename, len, optlist); } PDF_CATCH(p) { } return -1;
 }
 
 int _PDF_add_portfolio_folder(PDF *p, int parent, const char *foldername, int len, const char *optlist) {
-	PDF_TRY(p) { return PDF_add_portfolio_folder(p, parent, foldername, len, optlist); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_add_portfolio_folder(p, parent, foldername, len, optlist); } PDF_CATCH(p) { } return -1;
 }
 
 int _PDF_add_table_cell(PDF *p, int table, int column, int row, const char *text, int len, const char *optlist) {
-	PDF_TRY(p) { return PDF_add_table_cell(p, table, column, row, text, len, optlist); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_add_table_cell(p, table, column, row, text, len, optlist); } PDF_CATCH(p) { } return -1;
 }
 
 int _PDF_add_textflow(PDF *p, int textflow, const char *text, int len, const char *optlist) {
-	PDF_TRY(p) { return PDF_add_textflow(p, textflow, text, len, optlist); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_add_textflow(p, textflow, text, len, optlist); } PDF_CATCH(p) { } return -1;
 }
 
 void _PDF_add_thumbnail(PDF *p, int image) {
@@ -46,7 +46,7 @@ void _PDF_arcn(PDF *p, double x, double y, double r, double alpha, double beta) 
 }
 
 int _PDF_begin_document(PDF *p, const char *filename, int len, const char *optlist) {
-	PDF_TRY(p) { return PDF_begin_document(p, filename, len, optlist); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_begin_document(p, filename, len, optlist); } PDF_CATCH(p) { } return -1;
 }
 
 void _PDF_begin_font(PDF *p, const char *fontname, int len, double a, double b, double c, double d, double e, double f, const char *optlist) {
@@ -58,7 +58,7 @@ void _PDF_begin_glyph(PDF *p, const char *glyphname, double wx, double llx, doub
 }
 
 int _PDF_begin_item(PDF *p, const char *tag, const char *optlist) {
-	PDF_TRY(p) { PDF_begin_item(p, tag, optlist); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_begin_item(p, tag, optlist); } PDF_CATCH(p) { } return -1;
 }
 
 void _PDF_begin_layer(PDF *p, int layer) {
@@ -74,11 +74,11 @@ void _PDF_begin_page_ext(PDF *p, double width, double height, const char *optlis
 }
 
 int _PDF_begin_pattern(PDF *p, double width, double height, double xstep, double ystep, int painttype) {
-	PDF_TRY(p) { PDF_begin_pattern(p, width, height, xstep, ystep, painttype); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_begin_pattern(p, width, height, xstep, ystep, painttype); } PDF_CATCH(p) { } return 1;
 }
 
 int _PDF_begin_template_ext(PDF *p, double width, double height, const char *optlist) {
-	PDF_TRY(p) { PDF_begin_template_ext(p, width, height, optlist); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_begin_template_ext(p, width, height, optlist); } PDF_CATCH(p) { } return 1;
 }
 
 void _PDF_circle(PDF *p, double x, double y, double r) {
@@ -134,11 +134,11 @@ void _PDF_continue_text2(PDF *p, const char *text, int len) {
 }
 
 int _PDF_create_3dview(PDF *p, const char *username, int len, const char *optlist) {
-	PDF_TRY(p) { PDF_create_3dview(p, username, len, optlist); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_create_3dview(p, username, len, optlist); } PDF_CATCH(p) { } return -1;
 }
 
 int _PDF_create_action(PDF *p, const char *type, const char *optlist) {
-	PDF_TRY(p) { PDF_create_action(p, type, optlist); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_create_action(p, type, optlist); } PDF_CATCH(p) { } return -1;
 }
 
 void _PDF_create_annotation(PDF *p, double llx, double lly, double urx, double ury, const char *type, const char *optlist) {
@@ -146,7 +146,7 @@ void _PDF_create_annotation(PDF *p, double llx, double lly, double urx, double u
 }
 
 int _PDF_create_bookmark(PDF *p, const char *text, int len, const char *optlist) {
-	PDF_TRY(p) { PDF_create_bookmark(p, text, len, optlist); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_create_bookmark(p, text, len, optlist); } PDF_CATCH(p) { } return -1;
 }
 
 void _PDF_create_field(PDF *p, double llx, double lly, double urx, double ury, const char *name, int len, const char *type, const char *optlist) {
@@ -158,7 +158,7 @@ void _PDF_create_fieldgroup(PDF *p, const char *name, int len, const char *optli
 }
 
 int _PDF_create_gstate(PDF *p, const char *optlist) {
-	PDF_TRY(p) { PDF_create_gstate(p, optlist); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_create_gstate(p, optlist); } PDF_CATCH(p) { } return -1;
 }
 
 void _PDF_create_pvf(PDF *p, const char *filename, int len, const void *data, size_t size, const char *optlist) {
@@ -166,7 +166,7 @@ void _PDF_create_pvf(PDF *p, const char *filename, int len, const void *data, si
 }
 
 int _PDF_create_textflow(PDF *p, const char *text, int len, const char *optlist) {
-	PDF_TRY(p) { PDF_create_textflow(p, text, len, optlist); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_create_textflow(p, text, len, optlist); } PDF_CATCH(p) { } return -1;
 }
 
 void _PDF_curveto(PDF *p, double x_1, double y_1, double x_2, double y_2, double x_3, double y_3) {
@@ -174,7 +174,7 @@ void _PDF_curveto(PDF *p, double x_1, double y_1, double x_2, double y_2, double
 }
 
 int _PDF_define_layer(PDF *p, const char *name, int len, const char *optlist) {
-	PDF_TRY(p) { PDF_define_layer(p, name, len, optlist); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_define_layer(p, name, len, optlist); } PDF_CATCH(p) { } return -1;
 }
 
 void _PDF_delete(PDF *p) {
@@ -186,7 +186,7 @@ void _PDF_delete_path(PDF *p, int path) {
 }
 
 int _PDF_delete_pvf(PDF *p, const char *filename, int len) {
-	PDF_TRY(p) { PDF_delete_pvf(p, filename, len); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_delete_pvf(p, filename, len); } PDF_CATCH(p) { } return -1;
 }
 
 void _PDF_delete_table(PDF *p, int table, const char *optlist) {
@@ -254,11 +254,11 @@ void _PDF_fill(PDF *p) {
 }
 
 int _PDF_fill_imageblock(PDF *p, int page, const char *blockname, int image, const char *optlist) {
-	PDF_TRY(p) { PDF_fill_imageblock(p, page, blockname, image, optlist); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_fill_imageblock(p, page, blockname, image, optlist); } PDF_CATCH(p) { } return -1;
 }
 
 int _PDF_fill_pdfblock(PDF *p, int page, const char *blockname, int contents, const char *optlist) {
-	PDF_TRY(p) { PDF_fill_pdfblock(p, page, blockname, contents, optlist); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_fill_pdfblock(p, page, blockname, contents, optlist); } PDF_CATCH(p) { } return -1;
 }
 
 void _PDF_fill_stroke(PDF *p) {
@@ -266,7 +266,7 @@ void _PDF_fill_stroke(PDF *p) {
 }
 
 int _PDF_fill_textblock(PDF *p, int page, const char *blockname, const char *text, int len, const char *optlist) {
-	PDF_TRY(p) { PDF_fill_textblock(p, page, blockname, text, len, optlist); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_fill_textblock(p, page, blockname, text, len, optlist); } PDF_CATCH(p) { } return -1;
 }
 
 void _PDF_fit_image(PDF *p, int image, double x, double y, const char *optlist) {
@@ -278,11 +278,11 @@ void _PDF_fit_pdi_page(PDF *p, int page, double x, double y, const char *optlist
 }
 
 const char * _PDF_fit_table(PDF *p, int table, double llx, double lly, double urx, double ury, const char *optlist) {
-	PDF_TRY(p) { PDF_fit_table(p, table, llx, lly, urx, ury, optlist); } PDF_CATCH(p) { } return "";
+	PDF_TRY(p) { return PDF_fit_table(p, table, llx, lly, urx, ury, optlist); } PDF_CATCH(p) { } return "";
 }
 
 const char * _PDF_fit_textflow(PDF *p, int textflow, double llx, double lly, double urx, double ury, const char *optlist) {
-	PDF_TRY(p) { PDF_fit_textflow(p, textflow, llx, lly, urx, ury, optlist); } PDF_CATCH(p) { } return "";
+	PDF_TRY(p) { return PDF_fit_textflow(p, textflow, llx, lly, urx, ury, optlist); } PDF_CATCH(p) { } return "";
 }
 
 void _PDF_fit_textline(PDF *p, const char *text, int len, double x, double y, const char *optlist) {
@@ -310,39 +310,39 @@ const char * _PDF_get_parameter(PDF *p, const char *key, double modifier) {
 }
 
 double _PDF_get_value(PDF *p, const char *key, double modifier) {
-	PDF_TRY(p) { return PDF_get_value(p, key, modifier); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_get_value(p, key, modifier); } PDF_CATCH(p) { } return -1;
 }
 
 double _PDF_info_font(PDF *p, int font, const char *keyword, const char *optlist) {
-	PDF_TRY(p) { return PDF_info_font(p, font, keyword, optlist); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_info_font(p, font, keyword, optlist); } PDF_CATCH(p) { } return -1;
 }
 
 double _PDF_info_image(PDF *p, int image, const char *keyword, const char *optlist) {
-	PDF_TRY(p) { return PDF_info_image(p, image, keyword, optlist); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_info_image(p, image, keyword, optlist); } PDF_CATCH(p) { } return -1;
 }
 
 double _PDF_info_matchbox(PDF *p, const char *boxname, int len, int num, const char *keyword) {
-	PDF_TRY(p) { return PDF_info_matchbox(p, boxname, len, num, keyword); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_info_matchbox(p, boxname, len, num, keyword); } PDF_CATCH(p) { } return -1;
 }
 
 double _PDF_info_path(PDF *p, int path, const char *keyword, const char *optlist) {
-	PDF_TRY(p) { return PDF_info_path(p, path, keyword, optlist); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_info_path(p, path, keyword, optlist); } PDF_CATCH(p) { } return -1;
 }
 
 double _PDF_info_pdi_page(PDF *p, int page, const char *keyword, const char *optlist) {
-	PDF_TRY(p) { PDF_info_pdi_page(p, page, keyword, optlist); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_info_pdi_page(p, page, keyword, optlist); } PDF_CATCH(p) { } return -1;
 }
 
 double _PDF_info_table(PDF *p, int table, const char *keyword) {
-	PDF_TRY(p) { PDF_info_table(p, table, keyword); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_info_table(p, table, keyword); } PDF_CATCH(p) { } return -1;
 }
 
 double _PDF_info_textflow(PDF *p, int textflow, const char *keyword) {
-	PDF_TRY(p) { PDF_info_textflow(p, textflow, keyword); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_info_textflow(p, textflow, keyword); } PDF_CATCH(p) { } return -1;
 }
 
 double _PDF_info_textline(PDF *p, const char *text, int len, const char *keyword, const char *optlist) {
-	PDF_TRY(p) { PDF_info_textline(p, text, len, keyword, optlist); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_info_textline(p, text, len, keyword, optlist); } PDF_CATCH(p) { } return -1;
 }
 
 void _PDF_initgraphics(PDF *p) {
@@ -354,23 +354,23 @@ void _PDF_lineto(PDF *p, double x, double y) {
 }
 
 int _PDF_load_3ddata(PDF *p, const char *filename, int len, const char *optlist) {
-	PDF_TRY(p) { PDF_load_3ddata(p, filename, len, optlist); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_load_3ddata(p, filename, len, optlist); } PDF_CATCH(p) { } return -1;
 }
 
 int _PDF_load_font(PDF *p, const char *fontname, int len, const char *encoding, const char *optlist) {
-	PDF_TRY(p) { PDF_load_font(p, fontname, len, encoding, optlist); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_load_font(p, fontname, len, encoding, optlist); } PDF_CATCH(p) { } return -1;
 }
 
 int _PDF_load_iccprofile(PDF *p, const char *profilename, int len, const char *optlist) {
-	PDF_TRY(p) { PDF_load_iccprofile(p, profilename, len, optlist); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_load_iccprofile(p, profilename, len, optlist); } PDF_CATCH(p) { } return -1;
 }
 
 int _PDF_load_image(PDF *p, const char *imagetype, const char *filename, int len, const char *optlist) {
-	PDF_TRY(p) { PDF_load_image(p, imagetype, filename, len, optlist); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_load_image(p, imagetype, filename, len, optlist); } PDF_CATCH(p) { } return -1;
 }
 
 int _PDF_makespotcolor(PDF *p, const char *spotname, int reserved) {
-	PDF_TRY(p) { PDF_makespotcolor(p, spotname, reserved); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_makespotcolor(p, spotname, reserved); } PDF_CATCH(p) { } return -1;
 }
 
 void _PDF_mc_point(PDF *p, const char *tag, const char *optlist) {
@@ -382,15 +382,15 @@ void _PDF_moveto(PDF *p, double x, double y) {
 }
 
 int _PDF_open_pdi_document(PDF *p, const char *filename, int len, const char *optlist) {
-	PDF_TRY(p) { return PDF_open_pdi_document(p, filename, len, optlist); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_open_pdi_document(p, filename, len, optlist); } PDF_CATCH(p) { } return -1;
 }
 
 int _PDF_open_pdi_page(PDF *p, int doc, int pagenumber, const char *optlist) {
-	PDF_TRY(p) { return PDF_open_pdi_page(p, doc, pagenumber, optlist); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_open_pdi_page(p, doc, pagenumber, optlist); } PDF_CATCH(p) { } return -1;
 }
 
 double _PDF_pcos_get_number(PDF *p, int doc, const char *path) {
-	PDF_TRY(p) { return PDF_pcos_get_number(p, doc, path); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_pcos_get_number(p, doc, path); } PDF_CATCH(p) { } return -1;
 }
 
 const char * _PDF_pcos_get_string(PDF *p, int doc, const char *path) {
@@ -402,7 +402,7 @@ const unsigned char * _PDF_pcos_get_stream(PDF *p, int doc, int *length, const c
 }
 
 int _PDF_process_pdi(PDF *p, int doc, int page, const char *optlist) {
-	PDF_TRY(p) { PDF_process_pdi(p, doc, page, optlist); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_process_pdi(p, doc, page, optlist); } PDF_CATCH(p) { } return -1;
 }
 
 void _PDF_rcurveto(PDF *p, double x_1, double y_1, double x_2, double y_2, double x_3, double y_3) {
@@ -454,8 +454,7 @@ void _PDF_set_option(PDF *p, const char *optlist) {
 }
 
 void _PDF_set_parameter(PDF *p, const char *key, const char *value) {
-	PDF_set_parameter(p, key, value);
-	// PDF_TRY(p) { PDF_set_parameter(p, key, value); } PDF_CATCH(p) { }
+	PDF_TRY(p) { PDF_set_parameter(p, key, value); } PDF_CATCH(p) { }
 }
 
 void _PDF_set_text_pos(PDF *p, double x, double y) {
@@ -511,7 +510,7 @@ int _PDF_shading(PDF *p, const char *shtype, double x_0, double y_0, double x_1,
 }
 
 int _PDF_shading_pattern(PDF *p, int shading, const char *optlist) {
-	PDF_TRY(p) { PDF_shading_pattern(p, shading, optlist); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_shading_pattern(p, shading, optlist); } PDF_CATCH(p) { } return -1;
 }
 
 void _PDF_shfill(PDF *p, int shading) {
@@ -539,11 +538,11 @@ void _PDF_skew(PDF *p, double alpha, double beta) {
 }
 
 double _PDF_stringwidth(PDF *p, const char *text, int font, double fontsize) {
-	PDF_TRY(p) { PDF_stringwidth(p, text, font, fontsize); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_stringwidth(p, text, font, fontsize); } PDF_CATCH(p) { } return -1;
 }
 
 double _PDF_stringwidth2(PDF *p, const char *text, int len, int font, double fontsize) {
-	PDF_TRY(p) { PDF_stringwidth2(p, text, len, font, fontsize); } PDF_CATCH(p) { } return 0;
+	PDF_TRY(p) { return PDF_stringwidth2(p, text, len, font, fontsize); } PDF_CATCH(p) { } return -1;
 }
 
 void _PDF_stroke(PDF *p) {
@@ -559,25 +558,25 @@ void _PDF_translate(PDF *p, double tx, double ty) {
 }
 
 const char * _PDF_utf16_to_utf8(PDF *p, const char *utf16string, int len, int *size) {
-	PDF_TRY(p) { PDF_utf16_to_utf8(p, utf16string, len, size); } PDF_CATCH(p) { } return "";
+	PDF_TRY(p) { return PDF_utf16_to_utf8(p, utf16string, len, size); } PDF_CATCH(p) { } return "";
 }
 
 const char * _PDF_utf8_to_utf16(PDF *p, const char *utf8string, const char *ordering, int *size) {
-	PDF_TRY(p) { PDF_utf8_to_utf16(p, utf8string, ordering, size); } PDF_CATCH(p) { } return "";
+	PDF_TRY(p) { return PDF_utf8_to_utf16(p, utf8string, ordering, size); } PDF_CATCH(p) { } return "";
 }
 
 const char * _PDF_utf32_to_utf8(PDF *p, const char *utf32string, int len, int *size) {
-	PDF_TRY(p) { PDF_utf32_to_utf8(p, utf32string, len, size); } PDF_CATCH(p) { } return "";
+	PDF_TRY(p) { return PDF_utf32_to_utf8(p, utf32string, len, size); } PDF_CATCH(p) { } return "";
 }
 
 const char * _PDF_utf8_to_utf32(PDF *p, const char *utf8string, const char *ordering, int *size) {
-	PDF_TRY(p) { PDF_utf8_to_utf32(p, utf8string, ordering, size); } PDF_CATCH(p) { } return "";
+	PDF_TRY(p) { return PDF_utf8_to_utf32(p, utf8string, ordering, size); } PDF_CATCH(p) { } return "";
 }
 
 const char * _PDF_utf16_to_utf32(PDF *p, const char *utf16string, int len, const char *ordering, int *size) {
-	PDF_TRY(p) { PDF_utf16_to_utf32(p, utf16string, len, ordering, size); } PDF_CATCH(p) { } return "";
+	PDF_TRY(p) { return PDF_utf16_to_utf32(p, utf16string, len, ordering, size); } PDF_CATCH(p) { } return "";
 }
 
 const char * _PDF_utf32_to_utf16(PDF *p, const char *utf32string, int len, const char *ordering, int *size) {
-	PDF_TRY(p) { PDF_utf32_to_utf16(p, utf32string, len, ordering, size); } PDF_CATCH(p) { } return "";
+	PDF_TRY(p) { return PDF_utf32_to_utf16(p, utf32string, len, ordering, size); } PDF_CATCH(p) { } return "";
 }
