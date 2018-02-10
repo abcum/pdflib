@@ -18,5 +18,5 @@
 package pdflib
 
 // #cgo CFLAGS: -Iinclude
-// #cgo LDFLAGS: -Ilib ${SRCDIR}/lib/libpdf9-darwin.a -lm -framework ApplicationServices
+// #cgo LDFLAGS: -L${SRCDIR}/lib -lpdf9-darwin -lm -framework ApplicationServices
 import "C"

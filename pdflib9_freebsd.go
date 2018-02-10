@@ -18,5 +18,5 @@
 package pdflib
 
 // #cgo CFLAGS: -Iinclude
-// #cgo LDFLAGS: -Ilib ${SRCDIR}/lib/libpdf9-freebsd.a -lm
+// #cgo LDFLAGS: -L${SRCDIR}/lib -lpdf9-freebsd -lm
 import "C"
