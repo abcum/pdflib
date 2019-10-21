@@ -14,9 +14,10 @@
 
 // +build pdflib9 !pdflib8
 // +build cgo
+// +build alpine
 
 package pdflib
 
 // #cgo CFLAGS: -Iinclude
-// #cgo LDFLAGS: -L${SRCDIR}/lib -lpdf9-amd64-linux -lm
+// #cgo LDFLAGS: -L${SRCDIR}/lib -lpdf9-alpine -lm
 import "C"
