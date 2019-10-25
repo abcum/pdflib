@@ -14,6 +14,7 @@
 
 // +build pdflib9 !pdflib8
 // +build cgo
+// +build !alpine
 
 package pdflib
 
