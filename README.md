@@ -24,6 +24,12 @@ go install -tags 'pdflib8'
 go install -tags 'pdflib9' 
 ```
 
+#### Building for Alpine Linux
+
+```bash
+go build -tags 'alpine' ... 
+```
+
 #### Requirements
 
 - Golang >= 1.5
