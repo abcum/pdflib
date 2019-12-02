@@ -349,6 +349,22 @@ void _PDF_initgraphics(PDF *p) {
 	PDF_TRY(p) { PDF_initgraphics(p); } PDF_CATCH(p) { }
 }
 
+int _PDF_load_graphics(PDF *p, const char *type, const char *filename, int len, const char *optlist) {
+	PDF_TRY(p) { return PDF_load_graphics(p, type, filename, len, optlist); } PDF_CATCH(p) { } return -1;
+}
+
+void _PDF_close_graphics(PDF *p, int graphics) {
+	PDF_TRY(p) { PDF_close_graphics(p, graphics); } PDF_CATCH(p) { }
+}
+
+void _PDF_fit_graphics(PDF *p, int graphics, double x, double y, const char *optlist) {
+	PDF_TRY(p) { PDF_fit_graphics(p, graphics, x, y, optlist); } PDF_CATCH(p) { }
+}
+
+double _PDF_info_graphics(PDF *p, int graphics, const char *keyword, const char *optlist) {
+	PDF_TRY(p) { PDF_info_graphics(p, graphics, keyword, optlist); } PDF_CATCH(p) { }
+}
+
 void _PDF_lineto(PDF *p, double x, double y) {
 	PDF_TRY(p) { PDF_lineto(p, x, y); } PDF_CATCH(p) { }
 }

@@ -681,6 +681,22 @@ PDF_info_textline(PDF *p, const char *text, int len, const char *keyword,
 PDFLIB_API void PDFLIB_CALL
 PDF_initgraphics(PDF *p);
 
+/* Open a disk-based or virtual vector graphics file subject to various options. */
+PDFLIB_API int PDFLIB_CALL
+PDF_load_graphics(PDF *p, const char *type, const char *filename, int len, const char *optlist);
+
+/* Close vector graphics. */
+PDFLIB_API void PDFLIB_CALL
+PDF_close_graphics(PDF *p, int graphics);
+
+/* Place vector graphics on a content stream, subject to various options. */
+PDFLIB_API void PDFLIB_CALL
+PDF_fit_graphics(PDF *p, int graphics, double x, double y, const char *optlist);
+
+/* Format vector graphics and query metrics and other properties. */
+PDFLIB_API double PDFLIB_CALL
+PDF_info_graphics(PDF *p, int graphics, const char *keyword, const char *optlist);
+
 /* Draw a line from the current point to another point. */
 PDFLIB_API void PDFLIB_CALL
 PDF_lineto(PDF *p, double x, double y);
@@ -1326,6 +1342,13 @@ struct PDFlib_api_s {
                 const char *keyword, const char *optlist);
     void (PDFLIB_CALL * PDF_initgraphics)(PDF *p);
     void (PDFLIB_CALL * PDF_lineto)(PDF *p, double x, double y);
+    int (PDFLIB_CALL * PDF_load_graphics)(PDF *p, const char *type, const char *filename,
+                int len, const char *optlist);
+    void (PDFLIB_CALL * PDF_close_graphics)(PDF *p, int graphics);
+    void (PDFLIB_CALL * PDF_fit_graphics)(PDF *p, int graphics, double x, double y,
+                const char *optlist);
+    double (PDFLIB_CALL * PDF_info_graphics)(PDF *p, int graphics, const char *keyword,
+                const char *optlist);
     int (PDFLIB_CALL * PDF_load_3ddata)(PDF *p, const char *filename, int len,
                 const char *optlist);
     int (PDFLIB_CALL * PDF_load_font)(PDF *p, const char *fontname,
