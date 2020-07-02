@@ -362,7 +362,7 @@ void _PDF_fit_graphics(PDF *p, int graphics, double x, double y, const char *opt
 }
 
 double _PDF_info_graphics(PDF *p, int graphics, const char *keyword, const char *optlist) {
-	PDF_TRY(p) { PDF_info_graphics(p, graphics, keyword, optlist); } PDF_CATCH(p) { }
+	PDF_TRY(p) { return PDF_info_graphics(p, graphics, keyword, optlist); } PDF_CATCH(p) { }
 }
 
 void _PDF_lineto(PDF *p, double x, double y) {
