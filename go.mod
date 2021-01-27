@@ -1,3 +1,3 @@
-module github.com/naueramant/pdflib
+module github.com/abcum/pdflib
 
 go 1.13
