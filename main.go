@@ -511,6 +511,30 @@ func (p *PDFlib) InitGraphics() error {
 	return p.catch()
 }
 
+// LoadGraphics ...
+func (p *PDFlib) LoadGraphics(graphicstype, filename, options string) (int, error) {
+	ret := int(C._PDF_load_graphics(p.val, C.CString(graphicstype), C.CString(filename), 0, C.CString(options)))
+	return ret, p.catch()
+}
+
+// CloseGraphics ...
+func (p *PDFlib) CloseGraphics(graphics int) error {
+	C._PDF_close_graphics(p.val, C.int(graphics))
+	return p.catch()
+}
+
+// FitGraphics ...
+func (p *PDFlib) FitGraphics(graphics int, x float64, y float64, options string) error {
+	C._PDF_fit_graphics(p.val, C.int(graphics), C.double(x), C.double(y), C.CString(options))
+	return p.catch()
+}
+
+// InfoGraphics ...
+func (p *PDFlib) InfoGraphics(graphics int, keyword string, options string) (float64, error) {
+	ret := float64(C._PDF_info_graphics(p.val, C.int(graphics), C.CString(keyword), C.CString(options)))
+	return ret, p.catch()
+}
+
 // LineTo ...
 func (p *PDFlib) LineTo(x, y float64) error {
 	C._PDF_lineto(p.val, C.double(x), C.double(y))

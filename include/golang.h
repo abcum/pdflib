@@ -178,6 +178,14 @@ double _PDF_info_textline(PDF *p, const char *text, int len, const char *keyword
 
 void _PDF_initgraphics(PDF *p);
 
+int _PDF_load_graphics(PDF *p, const char *type, const char *filename, int len, const char *optlist);
+
+void _PDF_close_graphics(PDF *p, int graphics);
+
+void _PDF_fit_graphics(PDF *p, int graphics, double x, double y, const char *optlist);
+
+double _PDF_info_graphics(PDF *p, int graphics, const char *keyword, const char *optlist);
+
 void _PDF_lineto(PDF *p, double x, double y);
 
 int _PDF_load_3ddata(PDF *p, const char *filename, int len, const char *optlist);
