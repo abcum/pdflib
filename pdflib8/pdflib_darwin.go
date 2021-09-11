@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build pdflib8 && cgo
-// +build pdflib8,cgo
+//go:build cgo
+// +build cgo
 
 package pdflib
 
 // #cgo CFLAGS: -Iinclude
-// #cgo LDFLAGS: -L${SRCDIR}/pdflib8/lib -lpdf-linux -lm
+// #cgo LDFLAGS: -L${SRCDIR}/lib -lpdf-darwin -lm -framework ApplicationServices
 import "C"

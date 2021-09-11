@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:build (pdflib9 || !pdflib8) && cgo && alpine
 // +build pdflib9 !pdflib8
 // +build cgo
 // +build alpine
@@ -19,5 +20,5 @@
 package pdflib
 
 // #cgo CFLAGS: -Iinclude
-// #cgo LDFLAGS: -L${SRCDIR}/lib -lpdf9-alpine -lm
+// #cgo LDFLAGS: -L${SRCDIR}/pdflib9/lib -lpdf-alpine -lm
 import "C"

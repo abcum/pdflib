@@ -12,11 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:build (pdflib9 || !pdflib8) && cgo
 // +build pdflib9 !pdflib8
 // +build cgo
 
 package pdflib
 
 // #cgo CFLAGS: -Iinclude
-// #cgo LDFLAGS: -L${SRCDIR}/lib -lpdf9-freebsd -lm
+// #cgo LDFLAGS: -L${SRCDIR}/pdflib9/lib -lpdf-freebsd -lm
 import "C"

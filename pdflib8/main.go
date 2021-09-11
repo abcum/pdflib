@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build cgo
 // +build cgo
 
 package pdflib
@@ -22,10 +21,8 @@ package pdflib
 // #include "golang.h"
 // #include "pdflib.h"
 import "C"
-import (
-	"errors"
-	"unsafe"
-)
+import "errors"
+import "unsafe"
 
 // PDFlib represents a PDFlib instance.
 type PDFlib struct {
