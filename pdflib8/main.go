@@ -589,6 +589,30 @@ func (p *PDFlib) PcosGetStream(doc int, options, path string) (string, error) {
 	return ret, p.catch()
 }
 
+// PocaDelete ...
+func (p *PDFlib) PocaDelete(container int, options string) error {
+	C._PDF_poca_delete(p.val, C.int(container), C.CString(options))
+	return p.catch()
+}
+
+// PocaInsert ...
+func (p *PDFlib) PocaInsert(container int, options string) error {
+	C._PDF_poca_insert(p.val, C.int(container), C.CString(options))
+	return p.catch()
+}
+
+// PocaNew ...
+func (p *PDFlib) PocaNew(options string) (int, error) {
+	ret := int(C._PDF_poca_new(p.val, C.CString(options)))
+	return ret, p.catch()
+}
+
+// PocaRemove ...
+func (p *PDFlib) PocaRemove(container int, options string) error {
+	C._PDF_poca_remove(p.val, C.int(container), C.CString(options))
+	return p.catch()
+}
+
 // ProcessPdi ...
 func (p *PDFlib) ProcessPdi(doc, page int, options string) (int, error) {
 	ret := int(C._PDF_process_pdi(p.val, C.int(doc), C.int(page), C.CString(options)))
