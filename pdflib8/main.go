@@ -607,6 +607,12 @@ func (p *PDFlib) PocaNew(options string) (int, error) {
 	return ret, p.catch()
 }
 
+// PocaRemove ...
+func (p *PDFlib) PocaRemove(container int, options string) error {
+	C._PDF_poca_remove(p.val, C.int(container), C.CString(options))
+	return p.catch()
+}
+
 // ProcessPdi ...
 func (p *PDFlib) ProcessPdi(doc, page int, options string) (int, error) {
 	ret := int(C._PDF_process_pdi(p.val, C.int(doc), C.int(page), C.CString(options)))

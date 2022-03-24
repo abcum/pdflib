@@ -413,6 +413,10 @@ int _PDF_poca_new(PDF *p, const char *optlist) {
 	PDF_TRY(p) { return PDF_poca_new(p, optlist); } PDF_CATCH(p) { } return -1;
 }
 
+void _PDF_poca_remove(PDF *p, int container, const char *optlist) {
+	PDF_TRY(p) { PDF_poca_remove(p, container, optlist); } PDF_CATCH(p) { }
+}
+
 int _PDF_process_pdi(PDF *p, int doc, int page, const char *optlist) {
 	PDF_TRY(p) { return PDF_process_pdi(p, doc, page, optlist); } PDF_CATCH(p) { } return -1;
 }
