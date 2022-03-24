@@ -589,6 +589,12 @@ func (p *PDFlib) PcosGetStream(doc int, options, path string) (string, error) {
 	return ret, p.catch()
 }
 
+// PocaInsert ...
+func (p *PDFlib) PocaInsert(container int, options string) error {
+	C._PDF_poca_insert(p.val, C.int(container), C.CString(options))
+	return p.catch()
+}
+
 // PocaNew ...
 func (p *PDFlib) PocaNew(options string) (int, error) {
 	ret := int(C._PDF_poca_new(p.val, C.CString(options)))
