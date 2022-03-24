@@ -589,6 +589,12 @@ func (p *PDFlib) PcosGetStream(doc int, options, path string) (string, error) {
 	return ret, p.catch()
 }
 
+// PocaNew ...
+func (p *PDFlib) PocaNew(options string) (int, error) {
+	ret := int(C._PDF_poca_new(p.val, C.CString(options)))
+	return ret, p.catch()
+}
+
 // ProcessPdi ...
 func (p *PDFlib) ProcessPdi(doc, page int, options string) (int, error) {
 	ret := int(C._PDF_process_pdi(p.val, C.int(doc), C.int(page), C.CString(options)))

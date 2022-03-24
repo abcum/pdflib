@@ -401,6 +401,10 @@ const unsigned char * _PDF_pcos_get_stream(PDF *p, int doc, int *length, const c
 	unsigned char *r; PDF_TRY(p) { return PDF_pcos_get_stream(p, doc, length, optlist, path); } PDF_CATCH(p) { } return r;
 }
 
+int _PDF_poca_new(PDF *p, const char *optlist) {
+	PDF_TRY(p) { return PDF_poca_new(p, optlist); } PDF_CATCH(p) { } return -1;
+}
+
 int _PDF_process_pdi(PDF *p, int doc, int page, const char *optlist) {
 	PDF_TRY(p) { return PDF_process_pdi(p, doc, page, optlist); } PDF_CATCH(p) { } return -1;
 }

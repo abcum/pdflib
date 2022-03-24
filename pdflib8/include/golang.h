@@ -204,6 +204,8 @@ const char * _PDF_pcos_get_string(PDF *p, int doc, const char *path);
 
 const unsigned char * _PDF_pcos_get_stream(PDF *p, int doc, int *length, const char *optlist, const char *path);
 
+int _PDF_poca_new(PDF *p, const char *optlist);
+
 int _PDF_process_pdi(PDF *p, int doc, int page, const char *optlist);
 
 void _PDF_rect(PDF *p, double x, double y, double width, double height);
