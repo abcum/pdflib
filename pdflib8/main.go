@@ -163,6 +163,12 @@ func (p *PDFlib) CloseFont(font int) error {
 	return p.catch()
 }
 
+// CloseGraphics closes vector graphics.
+func (p *PDFlib) CloseGraphics(graphics int) error {
+	C._PDF_close_graphics(p.val, C.int(graphics))
+	return p.catch()
+}
+
 // CloseImage closes an image ...
 func (p *PDFlib) CloseImage(image int) error {
 	C._PDF_close_image(p.val, C.int(image))
@@ -408,6 +414,12 @@ func (p *PDFlib) FillTextblock(page int, blockname, text, options string) (int, 
 	return ret, p.catch()
 }
 
+// FitGraphics places vector graphics on a content stream, subject to various options.
+func (p *PDFlib) FitGraphics(graphics int, x, y float64, options string) error {
+	C._PDF_fit_graphics(p.val, C.int(graphics), C.double(x), C.double(y), C.CString(options))
+	return p.catch()
+}
+
 // FitImage ...
 func (p *PDFlib) FitImage(image int, x, y float64, options string) error {
 	C._PDF_fit_image(p.val, C.int(image), C.double(x), C.double(y), C.CString(options))
@@ -460,6 +472,12 @@ func (p *PDFlib) GetValue(key string, modifier float64) (float64, error) {
 // InfoFont ...
 func (p *PDFlib) InfoFont(font int, keyword, options string) (float64, error) {
 	ret := float64(C._PDF_info_font(p.val, C.int(font), C.CString(keyword), C.CString(options)))
+	return ret, p.catch()
+}
+
+// InfoGraphics formats vector graphics and query metrics and other properties.
+func (p *PDFlib) InfoGraphics(graphics int, keyword, options string) (float64, error) {
+	ret := float64(C._PDF_info_graphics(p.val, C.int(graphics), C.CString(keyword), C.CString(options)))
 	return ret, p.catch()
 }
 
@@ -526,6 +544,12 @@ func (p *PDFlib) Load3dData(filename, options string) (int, error) {
 // LoadFont ...
 func (p *PDFlib) LoadFont(fontname, encoding, options string) (int, error) {
 	ret := int(C._PDF_load_font(p.val, C.CString(fontname), 0, C.CString(encoding), C.CString(options)))
+	return ret, p.catch()
+}
+
+// LoadGraphics opens a disk-based or virtual vector graphics file subject to various options
+func (p *PDFlib) LoadGraphics(graphicstype, filename, options string) (int, error) {
+	ret := int(C._PDF_load_graphics(p.val, C.CString(graphicstype), C.CString(filename), 0, C.CString(options)))
 	return ret, p.catch()
 }
 

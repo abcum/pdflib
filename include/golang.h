@@ -52,6 +52,8 @@ void _PDF_clip(PDF *p);
 
 void _PDF_close_font(PDF *p, int font);
 
+void _PDF_close_graphics(PDF *p, int graphics);
+
 void _PDF_close_image(PDF *p, int image);
 
 void _PDF_close_pdi_document(PDF *p, int doc);
@@ -138,6 +140,8 @@ void _PDF_fill_stroke(PDF *p);
 
 int _PDF_fill_textblock(PDF *p, int page, const char *blockname, const char *text, int len, const char *optlist);
 
+void _PDF_fit_graphics(PDF *p, int graphics, double x, double y, const char *optlist);
+
 void _PDF_fit_image(PDF *p, int image, double x, double y, const char *optlist);
 
 void _PDF_fit_pdi_page(PDF *p, int page, double x, double y, const char *optlist);
@@ -162,6 +166,8 @@ double _PDF_get_value(PDF *p, const char *key, double modifier);
 
 double _PDF_info_font(PDF *p, int font, const char *keyword, const char *optlist);
 
+double _PDF_info_graphics(PDF *p, int graphics, const char *keyword, const char *optlist);
+
 double _PDF_info_image(PDF *p, int image, const char *keyword, const char *optlist);
 
 double _PDF_info_matchbox(PDF *p, const char *boxname, int len, int num, const char *keyword);
@@ -183,6 +189,8 @@ void _PDF_lineto(PDF *p, double x, double y);
 int _PDF_load_3ddata(PDF *p, const char *filename, int len, const char *optlist);
 
 int _PDF_load_font(PDF *p, const char *fontname, int len, const char *encoding, const char *optlist);
+
+int _PDF_load_graphics(PDF *p, const char *graphicstype, const char *filename, int len, const char *optlist);
 
 int _PDF_load_iccprofile(PDF *p, const char *profilename, int len, const char *optlist);
 
