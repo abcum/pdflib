@@ -449,6 +449,10 @@ void _PDF_scale(PDF *p, double sx, double sy) {
 	PDF_TRY(p) { PDF_scale(p, sx, sy); } PDF_CATCH(p) { }
 }
 
+void _PDF_set_graphics_option(PDF *p, const char *optlist) {
+	PDF_TRY(p) { PDF_set_graphics_option(p, optlist); } PDF_CATCH(p) { }
+}
+
 void _PDF_set_gstate(PDF *p, int gstate) {
 	PDF_TRY(p) { PDF_set_gstate(p, gstate); } PDF_CATCH(p) { }
 }
