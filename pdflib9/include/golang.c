@@ -97,6 +97,10 @@ void _PDF_close_font(PDF *p, int font) {
 	PDF_TRY(p) { PDF_close_font(p, font); } PDF_CATCH(p) { }
 }
 
+void _PDF_close_graphics(PDF *p, int graphics) {
+	PDF_TRY(p) { PDF_close_graphics(p, graphics); } PDF_CATCH(p) { }
+}
+
 void _PDF_close_image(PDF *p, int image) {
 	PDF_TRY(p) { PDF_close_image(p, image); } PDF_CATCH(p) { }
 }
@@ -269,6 +273,10 @@ int _PDF_fill_textblock(PDF *p, int page, const char *blockname, const char *tex
 	PDF_TRY(p) { return PDF_fill_textblock(p, page, blockname, text, len, optlist); } PDF_CATCH(p) { } return -1;
 }
 
+void _PDF_fit_graphics(PDF *p, int graphics, double x, double y, const char *optlist) {
+	PDF_TRY(p) { PDF_fit_graphics(p, graphics, x, y, optlist); } PDF_CATCH(p) { }
+}
+
 void _PDF_fit_image(PDF *p, int image, double x, double y, const char *optlist) {
 	PDF_TRY(p) { PDF_fit_image(p, image, x, y, optlist); } PDF_CATCH(p) { }
 }
@@ -317,6 +325,10 @@ double _PDF_info_font(PDF *p, int font, const char *keyword, const char *optlist
 	PDF_TRY(p) { return PDF_info_font(p, font, keyword, optlist); } PDF_CATCH(p) { } return -1;
 }
 
+double _PDF_info_graphics(PDF *p, int graphics, const char *keyword, const char *optlist) {
+	PDF_TRY(p) { return PDF_info_graphics(p, graphics, keyword, optlist); } PDF_CATCH(p) { } return -1;
+}
+
 double _PDF_info_image(PDF *p, int image, const char *keyword, const char *optlist) {
 	PDF_TRY(p) { return PDF_info_image(p, image, keyword, optlist); } PDF_CATCH(p) { } return -1;
 }
@@ -359,6 +371,10 @@ int _PDF_load_3ddata(PDF *p, const char *filename, int len, const char *optlist)
 
 int _PDF_load_font(PDF *p, const char *fontname, int len, const char *encoding, const char *optlist) {
 	PDF_TRY(p) { return PDF_load_font(p, fontname, len, encoding, optlist); } PDF_CATCH(p) { } return -1;
+}
+
+int _PDF_load_graphics(PDF *p, const char *graphicstype, const char *filename, int len, const char *optlist) {
+	PDF_TRY(p) { return PDF_load_graphics(p, graphicstype, filename, len, optlist); } PDF_CATCH(p) { } return -1;
 }
 
 int _PDF_load_iccprofile(PDF *p, const char *profilename, int len, const char *optlist) {
