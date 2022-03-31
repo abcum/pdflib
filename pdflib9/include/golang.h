@@ -226,6 +226,8 @@ void _PDF_save(PDF *p);
 
 void _PDF_scale(PDF *p, double sx, double sy);
 
+void _PDF_set_graphics_option(PDF *p, const char *optlist);
+
 void _PDF_set_gstate(PDF *p, int gstate);
 
 void _PDF_set_info(PDF *p, const char *key, const char *value);

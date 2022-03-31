@@ -664,6 +664,12 @@ func (p *PDFlib) Scale(sx, sy float64) error {
 	return p.catch()
 }
 
+// SetGraphicsOption sets one or more graphics appearance options.
+func (p *PDFlib) SetGraphicsOption(options string) error {
+	C._PDF_set_graphics_option(p.val, C.CString(options))
+	return p.catch()
+}
+
 // SetGstate ...
 func (p *PDFlib) SetGstate(gstate int) error {
 	C._PDF_set_gstate(p.val, C.int(gstate))
