@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:build cgo
 // +build cgo
 
 package pdflib
@@ -21,8 +22,11 @@ package pdflib
 // #include "golang.h"
 // #include "pdflib.h"
 import "C"
-import "errors"
-import "unsafe"
+
+import (
+	"errors"
+	"unsafe"
+)
 
 // PDFlib represents a PDFlib instance.
 type PDFlib struct {
@@ -45,25 +49,41 @@ func (p *PDFlib) catch() error {
 
 // AddNamedDest ...
 func (p *PDFlib) AddNamedDest(name, options string) error {
-	C._PDF_add_nameddest(p.val, C.CString(name), 0, C.CString(options))
+	cName := C.CString(name)
+	cOptions := C.CString(options)
+	C._PDF_add_nameddest(p.val, cName, 0, cOptions)
+	C.free(unsafe.Pointer(cOptions))
+	C.free(unsafe.Pointer(cName))
 	return p.catch()
 }
 
 // AddPathPoint ...
 func (p *PDFlib) AddPathPoint(path int, x, y float64, kind, options string) (int, error) {
-	ret := int(C._PDF_add_path_point(p.val, C.int(path), C.double(x), C.double(y), C.CString(kind), C.CString(options)))
+	cKind := C.CString(kind)
+	cOptions := C.CString(options)
+	ret := int(C._PDF_add_path_point(p.val, C.int(path), C.double(x), C.double(y), cKind, cOptions))
+	C.free(unsafe.Pointer(cOptions))
+	C.free(unsafe.Pointer(cKind))
 	return ret, p.catch()
 }
 
 // AddTableCell ...
 func (p *PDFlib) AddTableCell(table, col, row int, text, options string) (int, error) {
-	ret := int(C._PDF_add_table_cell(p.val, C.int(table), C.int(col), C.int(row), C.CString(text), 0, C.CString(options)))
+	cText := C.CString(text)
+	cOptions := C.CString(options)
+	ret := int(C._PDF_add_table_cell(p.val, C.int(table), C.int(col), C.int(row), cText, 0, cOptions))
+	C.free(unsafe.Pointer(cOptions))
+	C.free(unsafe.Pointer(cText))
 	return ret, p.catch()
 }
 
 // AddTextflow ...
 func (p *PDFlib) AddTextflow(textflow int, text, options string) (int, error) {
-	ret := int(C._PDF_add_textflow(p.val, C.int(textflow), C.CString(text), 0, C.CString(options)))
+	cText := C.CString(text)
+	cOptions := C.CString(options)
+	ret := int(C._PDF_add_textflow(p.val, C.int(textflow), cText, 0, cOptions))
+	C.free(unsafe.Pointer(cOptions))
+	C.free(unsafe.Pointer(cText))
 	return ret, p.catch()
 }
 
@@ -93,25 +113,37 @@ func (p *PDFlib) Arcn(x, y, r, alpha, beta float64) error {
 
 // BeginDocument ...
 func (p *PDFlib) BeginDocument(filename, options string) (int, error) {
-	ret := int(C._PDF_begin_document(p.val, C.CString(filename), 0, C.CString(options)))
+	cOptions := C.CString(options)
+	cFilename := C.CString(filename)
+	ret := int(C._PDF_begin_document(p.val, cFilename, 0, cOptions))
+	C.free(unsafe.Pointer(cFilename))
+	C.free(unsafe.Pointer(cOptions))
 	return ret, p.catch()
 }
 
 // BeginFont ...
 func (p *PDFlib) BeginFont(fontname string, a, b, c, d, e, f float64, options string) error {
-	C._PDF_begin_font(p.val, C.CString(fontname), 0, C.double(a), C.double(b), C.double(c), C.double(d), C.double(e), C.double(f), C.CString(options))
+	cOptions := C.CString(options)
+	cFontname := C.CString(fontname)
+	C._PDF_begin_font(p.val, cFontname, 0, C.double(a), C.double(b), C.double(c), C.double(d), C.double(e), C.double(f), cOptions)
+	C.free(unsafe.Pointer(cFontname))
+	C.free(unsafe.Pointer(cOptions))
 	return p.catch()
 }
 
 // BeginGlyph ...
 func (p *PDFlib) BeginGlyph(glyphname string, wx, llx, lly, urx, ury float64) error {
-	C._PDF_begin_glyph(p.val, C.CString(glyphname), C.double(wx), C.double(llx), C.double(lly), C.double(urx), C.double(ury))
+	cGlyphname := C.CString(glyphname)
+	C._PDF_begin_glyph(p.val, cGlyphname, C.double(wx), C.double(llx), C.double(lly), C.double(urx), C.double(ury))
+	C.free(unsafe.Pointer(cGlyphname))
 	return p.catch()
 }
 
 // BeginItem ..
 func (p *PDFlib) BeginItem(tag, options string) (int, error) {
-	ret := int(C._PDF_begin_item(p.val, C.CString(tag), C.CString(options)))
+	cOptions := C.CString(options)
+	ret := int(C._PDF_begin_item(p.val, C.CString(tag), cOptions))
+	C.free(unsafe.Pointer(cOptions))
 	return ret, p.catch()
 }
 
@@ -123,7 +155,9 @@ func (p *PDFlib) BeginLayer(layer int) error {
 
 // BeginPageExt adds a new page to the document, and specify various options.
 func (p *PDFlib) BeginPageExt(w, h float64, options string) error {
-	C._PDF_begin_page_ext(p.val, C.double(w), C.double(h), C.CString(options))
+	cOptions := C.CString(options)
+	C._PDF_begin_page_ext(p.val, C.double(w), C.double(h), cOptions)
+	C.free(unsafe.Pointer(cOptions))
 	return p.catch()
 }
 
@@ -135,7 +169,9 @@ func (p *PDFlib) BeginPattern(w, h, xstep, ystep float64, painttype int) (int, e
 
 // BeginTemplate ...
 func (p *PDFlib) BeginTemplate(w, h float64, options string) (int, error) {
-	ret := int(C._PDF_begin_template_ext(p.val, C.double(w), C.double(h), C.CString(options)))
+	cOptions := C.CString(options)
+	ret := int(C._PDF_begin_template_ext(p.val, C.double(w), C.double(h), cOptions))
+	C.free(unsafe.Pointer(cOptions))
 	return ret, p.catch()
 }
 
@@ -213,61 +249,99 @@ func (p *PDFlib) Concat(a, b, c, d, e, f float64) error {
 
 // ContinueText ...
 func (p *PDFlib) ContinueText(text string) error {
-	C._PDF_continue_text(p.val, C.CString(text))
+	cText := C.CString(text)
+	C._PDF_continue_text(p.val, cText)
+	C.free(unsafe.Pointer(cText))
 	return p.catch()
 }
 
 // Create3dView ...
 func (p *PDFlib) Create3dView(username, options string) error {
-	C._PDF_create_3dview(p.val, C.CString(username), 0, C.CString(options))
+	cUsername := C.CString(username)
+	cOptions := C.CString(options)
+	C._PDF_create_3dview(p.val, cUsername, 0, cOptions)
+	C.free(unsafe.Pointer(cOptions))
+	C.free(unsafe.Pointer(cUsername))
 	return p.catch()
 }
 
 // CreateAction ...
 func (p *PDFlib) CreateAction(kind, options string) (int, error) {
-	ret := int(C._PDF_create_action(p.val, C.CString(kind), C.CString(options)))
+	cKind := C.CString(kind)
+	cOptions := C.CString(options)
+	ret := int(C._PDF_create_action(p.val, cKind, cOptions))
+	C.free(unsafe.Pointer(cOptions))
+	C.free(unsafe.Pointer(cKind))
 	return ret, p.catch()
 }
 
 // CreateAnnotation ...
 func (p *PDFlib) CreateAnnotation(llx, llr, urx, ury float64, kind, options string) error {
-	C._PDF_create_annotation(p.val, C.double(llx), C.double(llr), C.double(urx), C.double(ury), C.CString(kind), C.CString(options))
+	cKind := C.CString(kind)
+	cOptions := C.CString(options)
+	C._PDF_create_annotation(p.val, C.double(llx), C.double(llr), C.double(urx), C.double(ury), cKind, cOptions)
+	C.free(unsafe.Pointer(cOptions))
+	C.free(unsafe.Pointer(cKind))
 	return p.catch()
 }
 
 // CreateBookmark ...
 func (p *PDFlib) CreateBookmark(text, options string) (int, error) {
-	ret := int(C._PDF_create_bookmark(p.val, C.CString(text), 0, C.CString(options)))
+	cText := C.CString(text)
+	cOptions := C.CString(options)
+	ret := int(C._PDF_create_bookmark(p.val, cText, 0, cOptions))
+	C.free(unsafe.Pointer(cOptions))
+	C.free(unsafe.Pointer(cText))
 	return ret, p.catch()
 }
 
 // CreateField ...
 func (p *PDFlib) CreateField(llx, lly, urx, ury float64, name, kind, options string) error {
-	C._PDF_create_field(p.val, C.double(llx), C.double(lly), C.double(urx), C.double(ury), C.CString(name), 0, C.CString(kind), C.CString(options))
+	cName := C.CString(name)
+	cKind := C.CString(kind)
+	cOptions := C.CString(options)
+	C._PDF_create_field(p.val, C.double(llx), C.double(lly), C.double(urx), C.double(ury), cName, 0, cKind, cOptions)
+	C.free(unsafe.Pointer(cOptions))
+	C.free(unsafe.Pointer(cKind))
+	C.free(unsafe.Pointer(cName))
 	return p.catch()
 }
 
 // CreateFieldgroup ...
 func (p *PDFlib) CreateFieldgroup(name, options string) error {
-	C._PDF_create_fieldgroup(p.val, C.CString(name), 0, C.CString(options))
+	cName := C.CString(name)
+	cOptions := C.CString(options)
+	C._PDF_create_fieldgroup(p.val, cName, 0, cOptions)
+	C.free(unsafe.Pointer(cOptions))
+	C.free(unsafe.Pointer(cName))
 	return p.catch()
 }
 
 // CreateGstate ...
 func (p *PDFlib) CreateGstate(options string) (int, error) {
-	ret := int(C._PDF_create_gstate(p.val, C.CString(options)))
+	cOptions := C.CString(options)
+	ret := int(C._PDF_create_gstate(p.val, cOptions))
+	C.free(unsafe.Pointer(cOptions))
 	return ret, p.catch()
 }
 
 // CreatePvf ...
 func (p *PDFlib) CreatePvf(filename string, data []byte, options string) error {
-	C._PDF_create_pvf(p.val, C.CString(filename), 0, unsafe.Pointer(&data[0]), C.size_t(len(data)), C.CString(options))
+	cFilename := C.CString(filename)
+	cOptions := C.CString(options)
+	C._PDF_create_pvf(p.val, cFilename, 0, unsafe.Pointer(&data[0]), C.size_t(len(data)), cOptions)
+	C.free(unsafe.Pointer(cOptions))
+	C.free(unsafe.Pointer(cFilename))
 	return p.catch()
 }
 
 // CreateTextflow ...
 func (p *PDFlib) CreateTextflow(text, options string) (int, error) {
-	ret := int(C._PDF_create_textflow(p.val, C.CString(text), 0, C.CString(options)))
+	cText := C.CString(text)
+	cOptions := C.CString(options)
+	ret := int(C._PDF_create_textflow(p.val, cText, 0, cOptions))
+	C.free(unsafe.Pointer(cOptions))
+	C.free(unsafe.Pointer(cText))
 	return ret, p.catch()
 }
 
@@ -279,7 +353,11 @@ func (p *PDFlib) CurveTo(x1, y1, x2, y2, x3, y3 float64) error {
 
 // DefineLayer ...
 func (p *PDFlib) DefineLayer(name, options string) (int, error) {
-	ret := int(C._PDF_define_layer(p.val, C.CString(name), 0, C.CString(options)))
+	cName := C.CString(name)
+	cOptions := C.CString(options)
+	ret := int(C._PDF_define_layer(p.val, cName, 0, cOptions))
+	C.free(unsafe.Pointer(cOptions))
+	C.free(unsafe.Pointer(cName))
 	return ret, p.catch()
 }
 
@@ -296,13 +374,17 @@ func (p *PDFlib) DeletePath(path int) error {
 
 // DeletePvf ...
 func (p *PDFlib) DeletePvf(filename string) error {
-	C._PDF_delete_pvf(p.val, C.CString(filename), 0)
+	cFilename := C.CString(filename)
+	C._PDF_delete_pvf(p.val, cFilename, 0)
+	C.free(unsafe.Pointer(cFilename))
 	return p.catch()
 }
 
 // DeleteTable ...
 func (p *PDFlib) DeleteTable(table int, options string) error {
-	C._PDF_delete_table(p.val, C.int(table), C.CString(options))
+	cOptions := C.CString(options)
+	C._PDF_delete_table(p.val, C.int(table), cOptions)
+	C.free(unsafe.Pointer(cOptions))
 	return p.catch()
 }
 
@@ -314,7 +396,9 @@ func (p *PDFlib) DeleteTextflow(textflow int) error {
 
 // DrawPath ...
 func (p *PDFlib) DrawPath(path int, x, y float64, options string) error {
-	C._PDF_draw_path(p.val, C.int(path), C.double(x), C.double(y), C.CString(options))
+	cOptions := C.CString(options)
+	C._PDF_draw_path(p.val, C.int(path), C.double(x), C.double(y), cOptions)
+	C.free(unsafe.Pointer(cOptions))
 	return p.catch()
 }
 
@@ -326,7 +410,9 @@ func (p *PDFlib) Ellipse(x, y, rx, ry float64) error {
 
 // EndDocument ...
 func (p *PDFlib) EndDocument(options string) error {
-	C._PDF_end_document(p.val, C.CString(options))
+	cOptions := C.CString(options)
+	C._PDF_end_document(p.val, cOptions)
+	C.free(unsafe.Pointer(cOptions))
 	return p.catch()
 }
 
@@ -362,7 +448,9 @@ func (p *PDFlib) EndMc() error {
 
 // EndPageExt ...
 func (p *PDFlib) EndPageExt(options string) error {
-	C._PDF_end_page_ext(p.val, C.CString(options))
+	cOptions := C.CString(options)
+	C._PDF_end_page_ext(p.val, cOptions)
+	C.free(unsafe.Pointer(cOptions))
 	return p.catch()
 }
 
@@ -392,13 +480,21 @@ func (p *PDFlib) Fill() error {
 
 // FillImageblock ...
 func (p *PDFlib) FillImageblock(page int, blockname string, image int, options string) (int, error) {
-	ret := int(C._PDF_fill_imageblock(p.val, C.int(page), C.CString(blockname), C.int(image), C.CString(options)))
+	cBlockname := C.CString(blockname)
+	cOptions := C.CString(options)
+	ret := int(C._PDF_fill_imageblock(p.val, C.int(page), cBlockname, C.int(image), cOptions))
+	C.free(unsafe.Pointer(cOptions))
+	C.free(unsafe.Pointer(cBlockname))
 	return ret, p.catch()
 }
 
 // FillPdfblock ...
 func (p *PDFlib) FillPdfblock(page int, blockname string, content int, options string) (int, error) {
-	ret := int(C._PDF_fill_pdfblock(p.val, C.int(page), C.CString(blockname), C.int(content), C.CString(options)))
+	cBlockname := C.CString(blockname)
+	cOptions := C.CString(options)
+	ret := int(C._PDF_fill_pdfblock(p.val, C.int(page), cBlockname, C.int(content), cOptions))
+	C.free(unsafe.Pointer(cOptions))
+	C.free(unsafe.Pointer(cBlockname))
 	return ret, p.catch()
 }
 
@@ -410,43 +506,61 @@ func (p *PDFlib) FillStroke() error {
 
 // FillTextblock ...
 func (p *PDFlib) FillTextblock(page int, blockname, text, options string) (int, error) {
-	ret := int(C._PDF_fill_textblock(p.val, C.int(page), C.CString(blockname), C.CString(text), 0, C.CString(options)))
+	cBlockname := C.CString(blockname)
+	cText := C.CString(text)
+	cOptions := C.CString(options)
+	ret := int(C._PDF_fill_textblock(p.val, C.int(page), cBlockname, cText, 0, cOptions))
+	C.free(unsafe.Pointer(cOptions))
+	C.free(unsafe.Pointer(cText))
+	C.free(unsafe.Pointer(cBlockname))
 	return ret, p.catch()
 }
 
 // FitGraphics places vector graphics on a content stream, subject to various options.
 func (p *PDFlib) FitGraphics(graphics int, x, y float64, options string) error {
-	C._PDF_fit_graphics(p.val, C.int(graphics), C.double(x), C.double(y), C.CString(options))
+	cOptions := C.CString(options)
+	C._PDF_fit_graphics(p.val, C.int(graphics), C.double(x), C.double(y), cOptions)
+	C.free(unsafe.Pointer(cOptions))
 	return p.catch()
 }
 
 // FitImage ...
 func (p *PDFlib) FitImage(image int, x, y float64, options string) error {
-	C._PDF_fit_image(p.val, C.int(image), C.double(x), C.double(y), C.CString(options))
+	cOptions := C.CString(options)
+	C._PDF_fit_image(p.val, C.int(image), C.double(x), C.double(y), cOptions)
+	C.free(unsafe.Pointer(cOptions))
 	return p.catch()
 }
 
 // FitPdiPage ...
 func (p *PDFlib) FitPdiPage(page int, x, y float64, options string) error {
-	C._PDF_fit_pdi_page(p.val, C.int(page), C.double(x), C.double(y), C.CString(options))
+	cOptions := C.CString(options)
+	C._PDF_fit_pdi_page(p.val, C.int(page), C.double(x), C.double(y), cOptions)
+	C.free(unsafe.Pointer(cOptions))
 	return p.catch()
 }
 
 // FitTable ...
 func (p *PDFlib) FitTable(table int, llx, lly, urx, ury float64, options string) (string, error) {
-	ret := C.GoString(C._PDF_fit_table(p.val, C.int(table), C.double(llx), C.double(lly), C.double(urx), C.double(ury), C.CString(options)))
+	cOptions := C.CString(options)
+	ret := C.GoString(C._PDF_fit_table(p.val, C.int(table), C.double(llx), C.double(lly), C.double(urx), C.double(ury), cOptions))
+	C.free(unsafe.Pointer(cOptions))
 	return ret, p.catch()
 }
 
 // FitTextflow ...
 func (p *PDFlib) FitTextflow(textflow int, llx, lly, urx, ury float64, options string) (string, error) {
-	ret := C.GoString(C._PDF_fit_textflow(p.val, C.int(textflow), C.double(llx), C.double(lly), C.double(urx), C.double(ury), C.CString(options)))
+	cOptions := C.CString(options)
+	ret := C.GoString(C._PDF_fit_textflow(p.val, C.int(textflow), C.double(llx), C.double(lly), C.double(urx), C.double(ury), cOptions))
+	C.free(unsafe.Pointer(cOptions))
 	return ret, p.catch()
 }
 
 // FitTextline ...
 func (p *PDFlib) FitTextline(text string, x, y float64, options string) error {
-	C._PDF_fit_textline(p.val, C.CString(text), 0, C.double(x), C.double(y), C.CString(options))
+	cOptions := C.CString(options)
+	C._PDF_fit_textline(p.val, C.CString(text), 0, C.double(x), C.double(y), cOptions)
+	C.free(unsafe.Pointer(cOptions))
 	return p.catch()
 }
 
@@ -477,49 +591,73 @@ func (p *PDFlib) InfoFont(font int, keyword, options string) (float64, error) {
 
 // InfoGraphics formats vector graphics and query metrics and other properties.
 func (p *PDFlib) InfoGraphics(graphics int, keyword, options string) (float64, error) {
-	ret := float64(C._PDF_info_graphics(p.val, C.int(graphics), C.CString(keyword), C.CString(options)))
+	cOptions := C.CString(options)
+	ret := float64(C._PDF_info_graphics(p.val, C.int(graphics), C.CString(keyword), cOptions))
+	C.free(unsafe.Pointer(cOptions))
 	return ret, p.catch()
 }
 
 // InfoImage ...
 func (p *PDFlib) InfoImage(image int, keyword, options string) (float64, error) {
-	ret := float64(C._PDF_info_image(p.val, C.int(image), C.CString(keyword), C.CString(options)))
+	cOptions := C.CString(options)
+	ret := float64(C._PDF_info_image(p.val, C.int(image), C.CString(keyword), cOptions))
+	C.free(unsafe.Pointer(cOptions))
 	return ret, p.catch()
 }
 
 // InfoMatchbox ...
 func (p *PDFlib) InfoMatchbox(boxname string, num int, keyword string) (float64, error) {
-	ret := float64(C._PDF_info_matchbox(p.val, C.CString(boxname), 0, C.int(num), C.CString(keyword)))
+	cKeyword := C.CString(keyword)
+	ret := float64(C._PDF_info_matchbox(p.val, C.CString(boxname), 0, C.int(num), cKeyword))
+	C.free(unsafe.Pointer(cKeyword))
 	return ret, p.catch()
 }
 
 // InfoPath ...
 func (p *PDFlib) InfoPath(path int, keyword, options string) (float64, error) {
-	ret := float64(C._PDF_info_path(p.val, C.int(path), C.CString(keyword), C.CString(options)))
+	cOptions := C.CString(options)
+	cKeyword := C.CString(keyword)
+	ret := float64(C._PDF_info_path(p.val, C.int(path), cKeyword, cOptions))
+	C.free(unsafe.Pointer(cKeyword))
+	C.free(unsafe.Pointer(cOptions))
 	return ret, p.catch()
 }
 
 // InfoPdiPage ...
 func (p *PDFlib) InfoPdiPage(page int, keyword, options string) (float64, error) {
-	ret := float64(C._PDF_info_pdi_page(p.val, C.int(page), C.CString(keyword), C.CString(options)))
+	cOptions := C.CString(options)
+	cKeyword := C.CString(keyword)
+	ret := float64(C._PDF_info_pdi_page(p.val, C.int(page), cKeyword, cOptions))
+	C.free(unsafe.Pointer(cKeyword))
+	C.free(unsafe.Pointer(cOptions))
 	return ret, p.catch()
 }
 
 // InfoTable ...
 func (p *PDFlib) InfoTable(table int, keyword string) (float64, error) {
-	ret := float64(C._PDF_info_table(p.val, C.int(table), C.CString(keyword)))
+	cKeyword := C.CString(keyword)
+	ret := float64(C._PDF_info_table(p.val, C.int(table), cKeyword))
+	C.free(unsafe.Pointer(cKeyword))
 	return ret, p.catch()
 }
 
 // InfoTextflow ...
 func (p *PDFlib) InfoTextflow(textflow int, keyword string) (float64, error) {
-	ret := float64(C._PDF_info_textflow(p.val, C.int(textflow), C.CString(keyword)))
+	cKeyword := C.CString(keyword)
+	ret := float64(C._PDF_info_textflow(p.val, C.int(textflow), cKeyword))
+	C.free(unsafe.Pointer(cKeyword))
 	return ret, p.catch()
 }
 
 // InfoTextline ...
 func (p *PDFlib) InfoTextline(text, keyword, options string) (float64, error) {
-	ret := float64(C._PDF_info_textline(p.val, C.CString(text), 0, C.CString(keyword), C.CString(options)))
+	cText := C.CString(text)
+	cKeyword := C.CString(keyword)
+	cOptions := C.CString(options)
+	ret := float64(C._PDF_info_textline(p.val, cText, 0, cKeyword, cOptions))
+	C.free(unsafe.Pointer(cText))
+	C.free(unsafe.Pointer(cKeyword))
+	C.free(unsafe.Pointer(cOptions))
 	return ret, p.catch()
 }
 
@@ -537,43 +675,75 @@ func (p *PDFlib) LineTo(x, y float64) error {
 
 // Load3dData ...
 func (p *PDFlib) Load3dData(filename, options string) (int, error) {
-	ret := int(C._PDF_load_3ddata(p.val, C.CString(filename), 0, C.CString(options)))
+	cFilename := C.CString(filename)
+	cOptions := C.CString(options)
+	ret := int(C._PDF_load_3ddata(p.val, cFilename, 0, cOptions))
+	C.free(unsafe.Pointer(cFilename))
+	C.free(unsafe.Pointer(cOptions))
 	return ret, p.catch()
 }
 
 // LoadFont ...
 func (p *PDFlib) LoadFont(fontname, encoding, options string) (int, error) {
-	ret := int(C._PDF_load_font(p.val, C.CString(fontname), 0, C.CString(encoding), C.CString(options)))
+	cFontname := C.CString(fontname)
+	cEncoding := C.CString(encoding)
+	cOptions := C.CString(options)
+	ret := int(C._PDF_load_font(p.val, cFontname, 0, cEncoding, cOptions))
+	C.free(unsafe.Pointer(cOptions))
+	C.free(unsafe.Pointer(cEncoding))
+	C.free(unsafe.Pointer(cFontname))
 	return ret, p.catch()
 }
 
 // LoadGraphics opens a disk-based or virtual vector graphics file subject to various options
 func (p *PDFlib) LoadGraphics(graphicstype, filename, options string) (int, error) {
-	ret := int(C._PDF_load_graphics(p.val, C.CString(graphicstype), C.CString(filename), 0, C.CString(options)))
+	cGraphicstype := C.CString(graphicstype)
+	cFilename := C.CString(filename)
+	cOptions := C.CString(options)
+	ret := int(C._PDF_load_graphics(p.val, cGraphicstype, cFilename, 0, cOptions))
+	C.free(unsafe.Pointer(cOptions))
+	C.free(unsafe.Pointer(cFilename))
+	C.free(unsafe.Pointer(cGraphicstype))
 	return ret, p.catch()
 }
 
 // LoadIccProfile ...
 func (p *PDFlib) LoadIccProfile(profilename, options string) (int, error) {
-	ret := int(C._PDF_load_iccprofile(p.val, C.CString(profilename), 0, C.CString(options)))
+	cProfilename := C.CString(profilename)
+	cOptions := C.CString(options)
+	ret := int(C._PDF_load_iccprofile(p.val, cProfilename, 0, cOptions))
+	C.free(unsafe.Pointer(cOptions))
+	C.free(unsafe.Pointer(cProfilename))
 	return ret, p.catch()
 }
 
 // LoadImage ...
 func (p *PDFlib) LoadImage(imagetype, filename, options string) (int, error) {
-	ret := int(C._PDF_load_image(p.val, C.CString(imagetype), C.CString(filename), 0, C.CString(options)))
+	cImagetype := C.CString(imagetype)
+	cFilename := C.CString(filename)
+	cOptions := C.CString(options)
+	ret := int(C._PDF_load_image(p.val, cImagetype, cFilename, 0, cOptions))
+	C.free(unsafe.Pointer(cOptions))
+	C.free(unsafe.Pointer(cFilename))
+	C.free(unsafe.Pointer(cImagetype))
 	return ret, p.catch()
 }
 
 // MakeSpotColor ...
 func (p *PDFlib) MakeSpotColor(spotname string) (int, error) {
-	ret := int(C._PDF_makespotcolor(p.val, C.CString(spotname), 0))
+	cSpotname := C.CString(spotname)
+	ret := int(C._PDF_makespotcolor(p.val, cSpotname, 0))
+	C.free(unsafe.Pointer(cSpotname))
 	return ret, p.catch()
 }
 
 // McPoint ...
 func (p *PDFlib) McPoint(tag, options string) error {
-	C._PDF_mc_point(p.val, C.CString(tag), C.CString(options))
+	cTag := C.CString(tag)
+	cOptions := C.CString(options)
+	C._PDF_mc_point(p.val, cTag, cOptions)
+	C.free(unsafe.Pointer(cOptions))
+	C.free(unsafe.Pointer(cTag))
 	return p.catch()
 }
 
@@ -585,61 +755,85 @@ func (p *PDFlib) MoveTo(x, y float64) error {
 
 // OpenPdiDocument ...
 func (p *PDFlib) OpenPdiDocument(filename, options string) (int, error) {
-	ret := int(C._PDF_open_pdi_document(p.val, C.CString(filename), 0, C.CString(options)))
+	cFilename := C.CString(filename)
+	cOptions := C.CString(options)
+	ret := int(C._PDF_open_pdi_document(p.val, cFilename, 0, cOptions))
+	C.free(unsafe.Pointer(cOptions))
+	C.free(unsafe.Pointer(cFilename))
 	return ret, p.catch()
 }
 
 // OpenPdiPage ...
 func (p *PDFlib) OpenPdiPage(doc, page int, options string) (int, error) {
-	ret := int(C._PDF_open_pdi_page(p.val, C.int(doc), C.int(page), C.CString(options)))
+	cOptions := C.CString(options)
+	ret := int(C._PDF_open_pdi_page(p.val, C.int(doc), C.int(page), cOptions))
+	C.free(unsafe.Pointer(cOptions))
 	return ret, p.catch()
 }
 
 // PcosGetNumber ...
 func (p *PDFlib) PcosGetNumber(doc int, path string) (float64, error) {
-	ret := float64(C._PDF_pcos_get_number(p.val, C.int(doc), C.CString(path)))
+	cPath := C.CString(path)
+	ret := float64(C._PDF_pcos_get_number(p.val, C.int(doc), cPath))
+	C.free(unsafe.Pointer(cPath))
 	return ret, p.catch()
 }
 
 // PcosGetString ...
 func (p *PDFlib) PcosGetString(doc int, path string) (string, error) {
-	ret := string(C.GoString(C._PDF_pcos_get_string(p.val, C.int(doc), C.CString(path))))
+	cPath := C.CString(path)
+	ret := string(C.GoString(C._PDF_pcos_get_string(p.val, C.int(doc), cPath)))
+	C.free(unsafe.Pointer(cPath))
 	return ret, p.catch()
 }
 
 // PcosGetStream ...
 func (p *PDFlib) PcosGetStream(doc int, options, path string) (string, error) {
-	ret := "" // string(C.GoString(C._PDF_pcos_get_stream(p.val, C.int(doc), 0, C.CString(options), C.CString(path))))
+	cPath := C.CString(path)
+	cOptions := C.CString(options)
+	ret := "" // string(C.GoString(C._PDF_pcos_get_stream(p.val, C.int(doc), 0, cOptions, cPath)))
+	C.free(unsafe.Pointer(cOptions))
+	C.free(unsafe.Pointer(cPath))
 	return ret, p.catch()
 }
 
 // PocaDelete ...
 func (p *PDFlib) PocaDelete(container int, options string) error {
-	C._PDF_poca_delete(p.val, C.int(container), C.CString(options))
+	cOptions := C.CString(options)
+	C._PDF_poca_delete(p.val, C.int(container), cOptions)
+	C.free(unsafe.Pointer(cOptions))
 	return p.catch()
 }
 
 // PocaInsert ...
 func (p *PDFlib) PocaInsert(container int, options string) error {
-	C._PDF_poca_insert(p.val, C.int(container), C.CString(options))
+	cOptions := C.CString(options)
+	C._PDF_poca_insert(p.val, C.int(container), cOptions)
+	C.free(unsafe.Pointer(cOptions))
 	return p.catch()
 }
 
 // PocaNew ...
 func (p *PDFlib) PocaNew(options string) (int, error) {
-	ret := int(C._PDF_poca_new(p.val, C.CString(options)))
+	cOptions := C.CString(options)
+	ret := int(C._PDF_poca_new(p.val, cOptions))
+	C.free(unsafe.Pointer(cOptions))
 	return ret, p.catch()
 }
 
 // PocaRemove ...
 func (p *PDFlib) PocaRemove(container int, options string) error {
-	C._PDF_poca_remove(p.val, C.int(container), C.CString(options))
+	cOptions := C.CString(options)
+	C._PDF_poca_remove(p.val, C.int(container), cOptions)
+	C.free(unsafe.Pointer(cOptions))
 	return p.catch()
 }
 
 // ProcessPdi ...
 func (p *PDFlib) ProcessPdi(doc, page int, options string) (int, error) {
-	ret := int(C._PDF_process_pdi(p.val, C.int(doc), C.int(page), C.CString(options)))
+	cOptions := C.CString(options)
+	ret := int(C._PDF_process_pdi(p.val, C.int(doc), C.int(page), cOptions))
+	C.free(unsafe.Pointer(cOptions))
 	return ret, p.catch()
 }
 
@@ -663,7 +857,9 @@ func (p *PDFlib) Restore() error {
 
 // ResumePage ...
 func (p *PDFlib) ResumePage(options string) error {
-	C._PDF_resume_page(p.val, C.CString(options))
+	cOptions := C.CString(options)
+	C._PDF_resume_page(p.val, cOptions)
+	C.free(unsafe.Pointer(cOptions))
 	return p.catch()
 }
 
@@ -687,7 +883,9 @@ func (p *PDFlib) Scale(sx, sy float64) error {
 
 // SetGraphicsOption sets one or more graphics appearance options.
 func (p *PDFlib) SetGraphicsOption(options string) error {
-	C._PDF_set_graphics_option(p.val, C.CString(options))
+	cOptions := C.CString(options)
+	C._PDF_set_graphics_option(p.val, cOptions)
+	C.free(unsafe.Pointer(cOptions))
 	return p.catch()
 }
 
@@ -705,19 +903,27 @@ func (p *PDFlib) SetInfo(key, value string) error {
 
 // SetLayerDependency ...
 func (p *PDFlib) SetLayerDependency(kind, options string) error {
-	C._PDF_set_layer_dependency(p.val, C.CString(kind), C.CString(options))
+	cOptions := C.CString(options)
+	C._PDF_set_layer_dependency(p.val, C.CString(kind), cOptions)
+	C.free(unsafe.Pointer(cOptions))
 	return p.catch()
 }
 
 // SetOption ...
 func (p *PDFlib) SetOption(options string) error {
-	C._PDF_set_option(p.val, C.CString(options))
+	cOptions := C.CString(options)
+	C._PDF_set_option(p.val, cOptions)
+	C.free(unsafe.Pointer(cOptions))
 	return p.catch()
 }
 
 // SetParameter ...
 func (p *PDFlib) SetParameter(key, value string) error {
-	C._PDF_set_parameter(p.val, C.CString(key), C.CString(value))
+	cKey := C.CString(key)
+	cValue := C.CString(value)
+	C._PDF_set_parameter(p.val, cKey, cValue)
+	C.free(unsafe.Pointer(cValue))
+	C.free(unsafe.Pointer(cKey))
 	return p.catch()
 }
 
@@ -735,7 +941,11 @@ func (p *PDFlib) SetValue(key string, value float64) error {
 
 // SetColor ...
 func (p *PDFlib) SetColor(fstype, colorspace string, c1, c2, c3, c4 float64) error {
-	C._PDF_setcolor(p.val, C.CString(fstype), C.CString(colorspace), C.double(c1), C.double(c2), C.double(c3), C.double(c4))
+	cFstype := C.CString(fstype)
+	cColorspace := C.CString(colorspace)
+	C._PDF_setcolor(p.val, cFstype, cColorspace, C.double(c1), C.double(c2), C.double(c3), C.double(c4))
+	C.free(unsafe.Pointer(cColorspace))
+	C.free(unsafe.Pointer(cFstype))
 	return p.catch()
 }
 
@@ -747,7 +957,9 @@ func (p *PDFlib) SetDash(b, w float64) error {
 
 // SetDashPattern ...
 func (p *PDFlib) SetDashPattern(options string) error {
-	C._PDF_setdashpattern(p.val, C.CString(options))
+	cOptions := C.CString(options)
+	C._PDF_setdashpattern(p.val, cOptions)
+	C.free(unsafe.Pointer(cOptions))
 	return p.catch()
 }
 
@@ -795,13 +1007,19 @@ func (p *PDFlib) SetMiterLimit(miter float64) error {
 
 // Shading ...
 func (p *PDFlib) Shading(shtype string, x0, y0, x1, y1, c1, c2, c3, c4 float64, options string) (int, error) {
-	ret := int(C._PDF_shading(p.val, C.CString(shtype), C.double(x0), C.double(y0), C.double(x1), C.double(y1), C.double(c1), C.double(c2), C.double(c3), C.double(c4), C.CString(options)))
+	cOptions := C.CString(options)
+	cShtype := C.CString(shtype)
+	ret := int(C._PDF_shading(p.val, cShtype, C.double(x0), C.double(y0), C.double(x1), C.double(y1), C.double(c1), C.double(c2), C.double(c3), C.double(c4), cOptions))
+	C.free(unsafe.Pointer(cShtype))
+	C.free(unsafe.Pointer(cOptions))
 	return ret, p.catch()
 }
 
 // ShadingPattern ...
 func (p *PDFlib) ShadingPattern(shading int, options string) (int, error) {
-	ret := int(C._PDF_shading_pattern(p.val, C.int(shading), C.CString(options)))
+	cOptions := C.CString(options)
+	ret := int(C._PDF_shading_pattern(p.val, C.int(shading), cOptions))
+	C.free(unsafe.Pointer(cOptions))
 	return ret, p.catch()
 }
 
@@ -843,7 +1061,9 @@ func (p *PDFlib) Stroke() error {
 
 // SuspendPage ...
 func (p *PDFlib) SuspendPage(options string) error {
-	C._PDF_suspend_page(p.val, C.CString(options))
+	cOptions := C.CString(options)
+	C._PDF_suspend_page(p.val, cOptions)
+	C.free(unsafe.Pointer(cOptions))
 	return p.catch()
 }
 
